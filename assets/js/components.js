@@ -2,6 +2,8 @@ import { initGoogleTranslate } from "./translate.js";
 
 const THEME_STORAGE_KEY = "prs-theme";
 const FONT_AWESOME_KIT_URL = "https://kit.fontawesome.com/63ee9bf6ef.js";
+const LOGO_LIGHT_FILE = "LOGO_DEITADO_ASSOCIAÇÃO_LETRA_PRETA.png";
+const LOGO_DARK_FILE = "LOGO_DEITADO_ASSOCIAÇÃO_LETRA_BRANCA.png";
 
 function initFontAwesome() {
   if (document.querySelector('script[data-prs-fa="true"]')) {
@@ -49,12 +51,24 @@ function getPreferredTheme() {
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
-function applyTheme(theme) {
+function applyTheme(theme, basePath = ".") {
   document.documentElement.setAttribute("data-theme", theme);
+
+  const isDark = theme === "dark";
+  const logoFile = isDark ? LOGO_DARK_FILE : LOGO_LIGHT_FILE;
+  const logoPath = `${basePath}/assets/images/${encodeURIComponent(logoFile)}`;
+
+  document.querySelectorAll(".brand-logo, .footer-logo").forEach((logo) => {
+    logo.setAttribute("src", logoPath);
+  });
+
+  const favicon = document.querySelector('link[rel="icon"]');
+  if (favicon) {
+    favicon.setAttribute("href", logoPath);
+  }
 
   const toggle = document.getElementById("theme-toggle");
   if (toggle) {
-    const isDark = theme === "dark";
     toggle.innerHTML = isDark
       ? '<i class="fa-regular fa-sun" aria-hidden="true"></i>'
       : '<i class="fa-regular fa-moon" aria-hidden="true"></i>';
@@ -63,15 +77,15 @@ function applyTheme(theme) {
   }
 }
 
-function initThemeToggle() {
+function initThemeToggle(basePath) {
   const preferred = getPreferredTheme();
-  applyTheme(preferred);
+  applyTheme(preferred, basePath);
 
   const media = window.matchMedia("(prefers-color-scheme: dark)");
   media.addEventListener("change", (event) => {
     const saved = localStorage.getItem(THEME_STORAGE_KEY);
     if (!saved) {
-      applyTheme(event.matches ? "dark" : "light");
+      applyTheme(event.matches ? "dark" : "light", basePath);
     }
   });
 
@@ -84,7 +98,7 @@ function initThemeToggle() {
     const current = document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
     const next = current === "dark" ? "light" : "dark";
     localStorage.setItem(THEME_STORAGE_KEY, next);
-    applyTheme(next);
+    applyTheme(next, basePath);
   });
 }
 
@@ -142,6 +156,6 @@ export async function loadSharedComponents() {
   setActiveNavigation(activePage);
   initMobileNav();
   initFontAwesome();
-  initThemeToggle();
+  initThemeToggle(basePath);
   initGoogleTranslate();
 }
