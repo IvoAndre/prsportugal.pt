@@ -70,7 +70,7 @@ function applyTheme(theme, basePath = ".") {
   const toggle = document.getElementById("theme-toggle");
   if (toggle) {
     toggle.innerHTML = isDark
-      ? '<i class="fa-regular fa-sun" aria-hidden="true"></i>'
+      ? '<i class="fa-regular fa-lightbulb"></i>'
       : '<i class="fa-regular fa-moon" aria-hidden="true"></i>';
     toggle.setAttribute("aria-label", isDark ? "Ativar modo claro" : "Ativar modo escuro");
     toggle.setAttribute("title", isDark ? "Ativar modo claro" : "Ativar modo escuro");

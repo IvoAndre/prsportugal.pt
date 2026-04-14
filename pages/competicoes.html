@@ -13,27 +13,42 @@
     <div id="site-header"></div>
 
     <main>
-      <section class="page-hero">
-        <div class="container">
-          <p class="kicker">Calendário</p>
-          <h1 class="page-title">Competições PRS Portugal</h1>
-          <p class="lead">Lista oficial de todas as competições futuras.</p>
-        </div>
-      </section>
+  <!-- HERO -->
+  <section class="page-hero">
+    <div class="container">
+      <p class="kicker">Calendário</p>
+      <h1 class="page-title">Competições PRS Portugal</h1>
+      <p class="lead">Lista oficial de todas as competições futuras.</p>
+    </div>
+  </section>
 
-      <section class="section alt">
-        <div class="container">
-          <div class="section-head">
-            <h2>Calendário completo</h2>
-            <p class="muted">Atualizado com as próximas provas publicadas.</p>
-          </div>
-          <div id="events-grid" class="events-grid" aria-live="polite"></div>
-          <p id="events-empty" class="muted" hidden>
-            Sem competições publicadas de momento.
-          </p>
-        </div>
-      </section>
-    </main>
+  <!-- PROXIMA COMPETIÇÃO -->
+  <section class="section container">
+    <div class="section-head">
+      <h2>Próxima competição</h2>
+    </div>
+
+    <div id="next-event-highlight" class="next-event-card">
+      <p class="muted">A carregar próxima prova...</p>
+    </div>
+  </section>
+
+  <!-- CALENDÁRIO (igual ao teu) -->
+  <section class="section alt">
+    <div class="container">
+      <div class="section-head">
+        <h2>Calendário completo</h2>
+        <p class="muted">Atualizado com as próximas provas publicadas.</p>
+      </div>
+
+      <div id="events-grid" class="events-grid" aria-live="polite"></div>
+
+      <p id="events-empty" class="muted" hidden>
+        Sem competições publicadas de momento.
+      </p>
+    </div>
+  </section>
+</main>
 
     <div id="site-footer"></div>
 

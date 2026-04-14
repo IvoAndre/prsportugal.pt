@@ -93,6 +93,38 @@ function renderHeroNextEvent() {
   renderHeroCountdown();
 }
 
+
+
+
+function renderNextEventHighlight() {
+  const container = document.getElementById("next-event-highlight");
+
+  if (!container) return;
+
+  if (liveEvents.length === 0) {
+    container.innerHTML = `<p class="muted">Sem competições disponíveis.</p>`;
+    return;
+  }
+
+  const now = new Date();
+  const next = liveEvents.find((e) => e.date > now) || liveEvents[0];
+
+  const safeName = escapeHtml(next.name);
+  const safeLocation = escapeHtml(next.location || "Local por anunciar");
+
+  container.innerHTML = `
+    <h3>${safeName}</h3>
+    <p class="muted">${formatDate(next.date)} • ${safeLocation}</p>
+    ${
+      next.registrationUrl
+        ? `<a class="btn btn-primary" href="${escapeHtml(next.registrationUrl)}" target="_blank">Inscrever</a>`
+        : ""
+    }
+  `;
+
+  container.classList.add("highlight");
+}
+
 function renderEvents() {
   if (!eventsGrid || !emptyState) {
     return;
@@ -102,12 +134,14 @@ function renderEvents() {
     emptyState.hidden = false;
     eventsGrid.innerHTML = "";
     renderHeroNextEvent();
+    renderNextEventHighlight();
     return;
   }
 
   emptyState.hidden = true;
   eventsGrid.innerHTML = liveEvents.map(eventRowTemplate).join("");
   renderHeroNextEvent();
+  renderNextEventHighlight();
 }
 
 function tickHeroCountdown() {
