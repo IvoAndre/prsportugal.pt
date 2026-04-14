@@ -753,3 +753,36 @@ h2 {
   margin: 0 auto 12px;
   border: 2px solid rgba(255, 255, 255, 0.1);
 }
+
+
+
+.quick-card a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+
+  padding: 0.55rem 0.9rem;
+  margin-top: 0.5rem;
+
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+
+  color: var(--green);
+  font-weight: 700;
+  text-decoration: none;
+
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+
+
+.quick-card a:hover {
+  transform: translateY(-2px);
+  background: var(--green);
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+}
