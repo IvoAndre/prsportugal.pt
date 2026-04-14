@@ -111,18 +111,23 @@ function renderNextEventHighlight() {
 
   const safeName = escapeHtml(next.name);
   const safeLocation = escapeHtml(next.location || "Local por anunciar");
+  const safeCoverImageUrl = next.coverImageUrl ? escapeHtml(next.coverImageUrl) : "";
+  const highlightClasses = `next-event-card highlight${safeCoverImageUrl ? " has-cover" : ""}`;
 
   container.innerHTML = `
-    <h3>${safeName}</h3>
-    <p class="muted">${formatDate(next.date)} • ${safeLocation}</p>
-    ${
-      next.registrationUrl
-        ? `<a class="btn btn-primary" href="${escapeHtml(next.registrationUrl)}" target="_blank">Inscrever</a>`
-        : ""
-    }
+    <div class="next-event-content">
+      <h3>${safeName}</h3>
+      <p class="muted">${formatDate(next.date)} • ${safeLocation}</p>
+      ${
+        next.registrationUrl
+          ? `<a class="btn btn-primary" href="${escapeHtml(next.registrationUrl)}" target="_blank">+ Informações</a>`
+          : ""
+      }
+    </div>
+    ${safeCoverImageUrl ? `<img class="event-highlight-cover" src="${safeCoverImageUrl}" alt="Capa da competição ${safeName}" loading="lazy" />` : ""}
   `;
 
-  container.classList.add("highlight");
+  container.className = highlightClasses;
 }
 
 function renderEvents() {

@@ -1,0 +1,45 @@
+{
+  "title": "Competição 1",
+  "date": "2026-04-01",
+  "location": "Portugal",
+  "description": "Galeria fotográfica da competição.",
+  "thumbnail": "/pages/gallery/competicao1/capaprova2.jpg",
+  "images": [
+    {
+      "url": "/pages/gallery/competicao1/capaprova2.jpg",
+      "caption": "Linha de tiro"
+    },
+    {
+      "url": "/pages/gallery/competicao1/capaprova2.jpg",
+      "caption": "Linha de tiro"
+    },
+    {
+      "url": "/pages/gallery/competicao1/capaprova2.jpg",
+      "caption": "Linha de tiro"
+    },
+    {
+      "url": "/pages/gallery/competicao1/capaprova2.jpg",
+      "caption": "Linha de tiro"
+    },
+    {
+      "url": "/pages/gallery/competicao1/imagetest.jpg",
+      "caption": "Linha de tiro"
+    },
+    {
+      "url": "/pages/gallery/competicao1/capaprova2.jpg",
+      "caption": "Linha de tiro"
+    },
+    {
+      "url": "/pages/gallery/competicao1/capaprova2.jpg",
+      "caption": "Linha de tiro"
+    },
+    {
+      "url": "/pages/gallery/competicao1/capaprova1.jpg",
+      "caption": "Linha de tiro"
+    },
+    {
+      "url": "/pages/gallery/competicao1/imagetest.jpg",
+      "caption": "Preparação da prova"
+    }
+  ]
+}

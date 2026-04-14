@@ -1,32 +1,55 @@
 import { loadSharedComponents } from "./components.js";
 
+const config = window.PRS_CONFIG || {};
+
 function initContactForm() {
   const form = document.getElementById("contact-form");
   const feedback = document.getElementById("form-feedback");
+  const submitButton = document.getElementById("contact-submit");
+  const accessKeyInput = document.getElementById("web3forms-access-key");
 
-  if (!form || !feedback) {
+  if (!form || !feedback || !submitButton || !accessKeyInput) {
     return;
   }
 
-  form.addEventListener("submit", (event) => {
+  const accessKey = config.contactForm?.web3formsAccessKey || "";
+  accessKeyInput.value = accessKey;
+
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     if (!form.checkValidity()) {
-      feedback.textContent = "Preenche todos os campos obrigatorios antes de enviar.";
+      feedback.textContent = "Preenche todos os campos obrigatórios antes de enviar.";
       return;
     }
 
-    const data = new FormData(form);
-    const name = String(data.get("name") || "").trim();
-    const email = String(data.get("email") || "").trim();
-    const subject = String(data.get("subject") || "").trim();
-    const message = String(data.get("message") || "").trim();
+    if (!accessKey || accessKey.includes("COLOCA_AQUI")) {
+      feedback.textContent = "Falta configurar a access key do Web3Forms em config/site.config.js.";
+      return;
+    }
 
-    const body = encodeURIComponent(`Nome: ${name}\nEmail: ${email}\n\n${message}`);
-    const mailto = `mailto:geral@prsportugal.pt?subject=${encodeURIComponent(subject)}&body=${body}`;
+    submitButton.disabled = true;
+    feedback.textContent = "A enviar mensagem...";
 
-    window.location.href = mailto;
-    feedback.textContent = "A abrir o teu cliente de email para concluir o envio.";
+    try {
+      const formData = new FormData(form);
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: formData
+      });
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Erro no envio");
+      }
+
+      feedback.textContent = "Mensagem enviada com sucesso.";
+      form.reset();
+    } catch (error) {
+      feedback.textContent = "Não foi possível enviar. Tenta novamente dentro de alguns minutos.";
+    } finally {
+      submitButton.disabled = false;
+    }
   });
 }
 

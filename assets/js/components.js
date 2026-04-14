@@ -57,6 +57,7 @@ function applyTheme(theme, basePath = ".") {
   const isDark = theme === "dark";
   const logoFile = isDark ? LOGO_DARK_FILE : LOGO_LIGHT_FILE;
   const logoPath = `${basePath}/assets/images/${encodeURIComponent(logoFile)}`;
+  const iconPath = `${basePath}/assets/images/favicon.png`;
 
   document.querySelectorAll(".brand-logo, .footer-logo").forEach((logo) => {
     logo.setAttribute("src", logoPath);
@@ -64,7 +65,7 @@ function applyTheme(theme, basePath = ".") {
 
   const favicon = document.querySelector('link[rel="icon"]');
   if (favicon) {
-    favicon.setAttribute("href", logoPath);
+    favicon.setAttribute("href", iconPath);
   }
 
   const toggle = document.getElementById("theme-toggle");

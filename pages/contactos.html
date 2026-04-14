@@ -4,7 +4,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Contactos | PRS Portugal</title>
-    <link rel="icon" type="image/png" href="../assets/images/prs.png" />
+    <link rel="icon" type="image/png" href="../assets/images/favicon.png" />
+    <script>
+      (function () {
+        try {
+          const saved = localStorage.getItem("prs-theme");
+          const theme =
+            saved === "light" || saved === "dark"
+              ? saved
+              : window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? "dark"
+                : "light";
+          document.documentElement.setAttribute("data-theme", theme);
+        } catch (_) {}
+      })();
+    </script>
     <link rel="stylesheet" href="../assets/css/styles.css" />
     <script src="../config/site.config.js"></script>
   </head>
@@ -23,6 +37,9 @@
       <section class="section container">
         <h2>Formulário de contacto</h2>
         <form id="contact-form" class="contact-form" novalidate>
+          <input type="hidden" name="access_key" id="web3forms-access-key" />
+          <input type="hidden" name="subject" value="Novo contacto através do site PRS Portugal" />
+          <input type="checkbox" name="botcheck" class="hidden" tabindex="-1" autocomplete="off" />
           <label>
             Nome
             <input type="text" name="name" required />
@@ -39,7 +56,7 @@
             Mensagem
             <textarea name="message" rows="6" required></textarea>
           </label>
-          <button class="btn btn-primary" type="submit">Enviar</button>
+          <button class="btn btn-primary" type="submit" id="contact-submit">Enviar</button>
           <p id="form-feedback" class="muted form-feedback" role="status" aria-live="polite"></p>
         </form>
 

@@ -39,6 +39,34 @@ function readCell(cell) {
   return String(cell.v).trim();
 }
 
+function normalizeHeader(value) {
+  return String(value || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
+function resolveColumnIndexes(table) {
+  const cols = table?.cols || [];
+  const byLabel = new Map();
+
+  cols.forEach((col, index) => {
+    const label = normalizeHeader(col?.label || col?.id || "");
+    if (label) {
+      byLabel.set(label, index);
+    }
+  });
+
+  return {
+    cover: byLabel.get("capa") ?? -1,
+    date: byLabel.get("data") ?? -1,
+    name: byLabel.get("nome") ?? -1,
+    country: byLabel.get("pais") ?? -1,
+    link: byLabel.get("link") ?? -1
+  };
+}
+
 export async function fetchEventsFromSheet(config) {
   const { spreadsheetId, sheetName } = config;
 
@@ -61,17 +89,24 @@ export async function fetchEventsFromSheet(config) {
     .replace(/\);\s*$/, "");
 
   const payload = JSON.parse(jsonText);
-  const rows = payload?.table?.rows || [];
+  const table = payload?.table || {};
+  const rows = table?.rows || [];
+  const col = resolveColumnIndexes(table);
+
+  if (col.date < 0 || col.name < 0) {
+    return [];
+  }
 
   const events = rows
     .map((row, index) => {
       const cells = row.c || [];
 
-      const dateValue = cells[0]?.v;
-      const dateDisplay = readCell(cells[0]);
-      const name = readCell(cells[1]);
-      const country = readCell(cells[2]);
-      const registrationUrl = readCell(cells[3]);
+      const dateValue = cells[col.date]?.v;
+      const dateDisplay = readCell(cells[col.date]);
+      const name = readCell(cells[col.name]);
+      const country = col.country >= 0 ? readCell(cells[col.country]) : "";
+      const registrationUrl = col.link >= 0 ? readCell(cells[col.link]) : "";
+      const coverImageUrl = col.cover >= 0 ? readCell(cells[col.cover]) : "";
 
       const date = parseGoogleDate(dateValue) || parseGoogleDate(dateDisplay);
 
@@ -84,7 +119,8 @@ export async function fetchEventsFromSheet(config) {
         name,
         date,
         location: country,
-        registrationUrl
+        registrationUrl,
+        coverImageUrl
       };
     })
     .filter(Boolean)
