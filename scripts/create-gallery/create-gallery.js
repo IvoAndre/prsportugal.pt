@@ -35,13 +35,6 @@ function toSlug(value) {
     .replace(/^-+|-+$/g, "");
 }
 
-function captionFromFileName(fileName) {
-  return path.parse(fileName).name
-    .replace(/[_-]+/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
 async function readImageFiles(dir) {
   const entries = await fs.readdir(dir, { withFileTypes: true });
 
@@ -126,6 +119,11 @@ async function main() {
   const date = args.date || "";
   const location = args.location || "";
   const description = args.description || "";
+  const coverArg = args.cover;
+
+  if (coverArg === true) {
+    throw new Error("Usa --cover <nome-do-ficheiro>.");
+  }
 
   const galleryRoot = path.join(root, "pages", "gallery");
 
@@ -145,15 +143,26 @@ async function main() {
 
   const images = files.map(file => ({
     url: `/pages/gallery/${slug}/${file}`,
-    caption: captionFromFileName(file),
   }));
+
+  let thumbnailFile = files[0];
+  if (coverArg) {
+    const wanted = String(coverArg).toLowerCase();
+    const found = files.find(file => file.toLowerCase() === wanted);
+
+    if (!found) {
+      throw new Error(`Capa inválida: ${coverArg}. O ficheiro tem de existir na pasta de origem.`);
+    }
+
+    thumbnailFile = found;
+  }
 
   const competitionData = {
     title,
     date,
     location,
     description,
-    thumbnail: images[0].url,
+    thumbnail: `/pages/gallery/${slug}/${thumbnailFile}`,
     images,
   };
 
@@ -183,6 +192,7 @@ async function main() {
   console.log(`Slug: ${slug}`);
   console.log(`Pasta: ${competitionDir}`);
   console.log(`Index atualizado: ${indexJsonPath}`);
+  console.log(`Capa: ${thumbnailFile}`);
   console.log(`Total de imagens: ${images.length}`);
 }
 

@@ -6,6 +6,12 @@ Existe um script simples para criar uma galeria completa (pasta de imagens + JSO
 node scripts/create-gallery/create-gallery.js --source "caminho/para/pasta-de-imagens" --slug competicao2 --title "Competicao 2" --date 2026-05-01 --location "Lisboa" --description "Prova regional"
 ```
 
+Exemplo com capa definida pelo nome do ficheiro:
+
+```bash
+node scripts/create-gallery/create-gallery.js --source "./1Prova2026" --slug 1Prova2026 --title "1ª Prova 2026" --cover "__capaprova1.jpg"
+```
+
 Exemplo sem --source (usa por defeito a pasta images ao lado do script):
 
 ```bash
@@ -26,9 +32,11 @@ Opcoes disponiveis:
 - `--date` (opcional): data da competicao (ex: `2026-05-01`).
 - `--location` (opcional): local.
 - `--description` (opcional): descricao.
+- `--cover` (opcional): nome do ficheiro a usar como capa (ex: `__capaprova1.jpg`).
 
 O script:
 
 - Copia todas as imagens suportadas (`.jpg`, `.jpeg`, `.png`, `.webp`, `.gif`, `.avif`) para `pages/gallery/<slug>/`.
 - Gera `pages/gallery/<slug>.json` no formato usado pelo site.
 - Atualiza `pages/gallery/index.json` sem duplicar entradas.
+- Não gera captions automaticamente a partir do nome do ficheiro.
