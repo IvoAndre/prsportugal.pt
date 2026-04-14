@@ -28,7 +28,7 @@ async function loadPartial(url) {
 }
 
 function applyBasePath(html, basePath) {
-  return html.replaceAll("{{BASE}}", basePath);
+  return html.replaceAll("{{BASE}}", `${basePath}/prsportugal.pt/`);
 }
 
 function setActiveNavigation(activePage) {
