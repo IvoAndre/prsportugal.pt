@@ -142,7 +142,7 @@ async function main() {
   }
 
   const images = files.map(file => ({
-    url: `/pages/gallery/${slug}/${file}`,
+    url: `pages/gallery/${slug}/${file}`,
   }));
 
   let thumbnailFile = files[0];
@@ -162,7 +162,7 @@ async function main() {
     date,
     location,
     description,
-    thumbnail: `/pages/gallery/${slug}/${thumbnailFile}`,
+    thumbnail: `pages/gallery/${slug}/${thumbnailFile}`,
     images,
   };
 

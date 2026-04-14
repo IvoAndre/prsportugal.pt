@@ -47,6 +47,27 @@ function normalizeHeader(value) {
     .replace(/[\u0300-\u036f]/g, "");
 }
 
+function normalizeCoverPath(value) {
+  const source = String(value || "").trim();
+  if (!source) {
+    return "";
+  }
+
+  if (/^(?:[a-z]+:)?\/\//i.test(source) || source.startsWith("data:") || source.startsWith("blob:")) {
+    return source;
+  }
+
+  const normalized = source.replaceAll("\\", "/").replace(/^\/+/, "");
+  const galleryMatch = normalized.match(/^(pages\/gallery\/)([^/]+)(\/.*)$/i);
+
+  if (!galleryMatch) {
+    return normalized;
+  }
+
+  const [, prefix, slug, rest] = galleryMatch;
+  return `${prefix}${slug.toLowerCase()}${rest}`;
+}
+
 function resolveColumnIndexes(table) {
   const cols = table?.cols || [];
   const byLabel = new Map();
@@ -106,7 +127,7 @@ export async function fetchEventsFromSheet(config) {
       const name = readCell(cells[col.name]);
       const country = col.country >= 0 ? readCell(cells[col.country]) : "";
       const registrationUrl = col.link >= 0 ? readCell(cells[col.link]) : "";
-      const coverImageUrl = col.cover >= 0 ? readCell(cells[col.cover]) : "";
+      const coverImageUrl = col.cover >= 0 ? normalizeCoverPath(readCell(cells[col.cover])) : "";
 
       const date = parseGoogleDate(dateValue) || parseGoogleDate(dateDisplay);
 

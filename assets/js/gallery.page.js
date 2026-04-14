@@ -1,6 +1,21 @@
 import { loadSharedComponents } from "./components.js";
 
 const config = window.PRS_CONFIG || {};
+const basePath = (document.body?.dataset.base || ".").replace(/\/+$/, "");
+
+function resolveSiteUrl(value) {
+  const source = String(value || "").trim();
+  if (!source) {
+    return "";
+  }
+
+  if (/^(?:[a-z]+:)?\/\//i.test(source) || source.startsWith("data:") || source.startsWith("blob:")) {
+    return source;
+  }
+
+  const normalized = source.startsWith("/") ? source.slice(1) : source;
+  return `${basePath}/${normalized}`;
+}
 
 function escapeHtml(value) {
   return String(value)
@@ -31,7 +46,8 @@ function cardTemplate(slug, info) {
   const date = formatDate(info.date);
   const count = Array.isArray(info.images) ? info.images.length : 0;
   const thumbnail = typeof info.thumbnail === "string" ? info.thumbnail.trim() : "";
-  const safeThumb = thumbnail ? escapeHtml(thumbnail) : "";
+  const thumbUrl = resolveSiteUrl(thumbnail);
+  const safeThumb = thumbUrl ? escapeHtml(thumbUrl) : "";
 
   return `
     <article class="gallery-card">

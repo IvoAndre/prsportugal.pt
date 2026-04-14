@@ -1,5 +1,21 @@
 import { loadSharedComponents } from "./components.js";
 
+const basePath = (document.body?.dataset.base || ".").replace(/\/+$/, "");
+
+function resolveSiteUrl(value) {
+  const source = String(value || "").trim();
+  if (!source) {
+    return "";
+  }
+
+  if (/^(?:[a-z]+:)?\/\//i.test(source) || source.startsWith("data:") || source.startsWith("blob:")) {
+    return source;
+  }
+
+  const normalized = source.startsWith("/") ? source.slice(1) : source;
+  return `${basePath}/${normalized}`;
+}
+
 function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
@@ -140,7 +156,7 @@ function render(info, slug) {
         return "";
       }
 
-      const src = escapeHtml(String(source));
+      const src = escapeHtml(resolveSiteUrl(String(source)));
       const caption = typeof image === "object" && typeof image?.caption === "string" ? image.caption : "";
       const alt = escapeHtml(caption || `${name} - Fotografia ${index + 1}`);
         const safeCaption = escapeHtml(caption || `${name} - Fotografia ${index + 1}`);

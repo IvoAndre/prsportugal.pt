@@ -3,6 +3,7 @@ import { fetchEventsFromSheet } from "./sheets.js";
 
 const config = window.PRS_CONFIG || {};
 const locale = config.locale || "pt-PT";
+const basePath = (document.body?.dataset.base || ".").replace(/\/+$/, "");
 
 const eventsGrid = document.getElementById("events-grid");
 const emptyState = document.getElementById("events-empty");
@@ -28,6 +29,20 @@ function formatDate(date) {
   }).format(date);
 
   return formatted.charAt(0).toLocaleUpperCase(locale) + formatted.slice(1);
+}
+
+function resolveSiteUrl(value) {
+  const source = String(value || "").trim();
+  if (!source) {
+    return "";
+  }
+
+  if (/^(?:[a-z]+:)?\/\//i.test(source) || source.startsWith("data:") || source.startsWith("blob:")) {
+    return source;
+  }
+
+  const normalized = source.startsWith("/") ? source.slice(1) : source;
+  return `${basePath}/${normalized}`;
 }
 
 function eventRowTemplate(event) {
@@ -111,7 +126,7 @@ function renderNextEventHighlight() {
 
   const safeName = escapeHtml(next.name);
   const safeLocation = escapeHtml(next.location || "Local por anunciar");
-  const safeCoverImageUrl = next.coverImageUrl ? escapeHtml(next.coverImageUrl) : "";
+  const safeCoverImageUrl = next.coverImageUrl ? escapeHtml(resolveSiteUrl(next.coverImageUrl)) : "";
   const highlightClasses = `next-event-card highlight${safeCoverImageUrl ? " has-cover" : ""}`;
 
   container.innerHTML = `

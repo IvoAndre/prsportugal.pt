@@ -3,31 +3,31 @@
   "date": "2026-03",
   "location": "Portugal",
   "description": "Galeria fotográfica da 2ª prova de 2026",
-  "thumbnail": "/pages/gallery/2prova2026/capaprova2.jpg",
+  "thumbnail": "pages/gallery/2prova2026/capaprova2.jpg",
   "images": [
     {
-      "url": "/pages/gallery/2prova2026/_MTK8519.jpg"
+      "url": "pages/gallery/2prova2026/_MTK8519.jpg"
     },
     {
-      "url": "/pages/gallery/2prova2026/_MTK8520.jpg"
+      "url": "pages/gallery/2prova2026/_MTK8520.jpg"
     },
     {
-      "url": "/pages/gallery/2prova2026/_MTK8521.jpg"
+      "url": "pages/gallery/2prova2026/_MTK8521.jpg"
     },
     {
-      "url": "/pages/gallery/2prova2026/_MTK8526.jpg"
+      "url": "pages/gallery/2prova2026/_MTK8526.jpg"
     },
     {
-      "url": "/pages/gallery/2prova2026/_MTK8530.jpg"
+      "url": "pages/gallery/2prova2026/_MTK8530.jpg"
     },
     {
-      "url": "/pages/gallery/2prova2026/_MTK8544.jpg"
+      "url": "pages/gallery/2prova2026/_MTK8544.jpg"
     },
     {
-      "url": "/pages/gallery/2prova2026/_MTK9005.jpg"
+      "url": "pages/gallery/2prova2026/_MTK9005.jpg"
     },
     {
-      "url": "/pages/gallery/2prova2026/_MTK9475.jpg"
+      "url": "pages/gallery/2prova2026/_MTK9475.jpg"
     }
   ]
 }
