@@ -8,22 +8,19 @@ const IMAGE_EXTENSIONS = new Set([".jpg", ".jpeg", ".png", ".webp", ".gif", ".av
 function parseArgs(argv) {
   const options = {};
 
-  for (let index = 0; index < argv.length; index += 1) {
-    const token = argv[index];
-    if (!token.startsWith("--")) {
-      continue;
-    }
+  for (let i = 0; i < argv.length; i++) {
+    const token = argv[i];
+    if (!token.startsWith("--")) continue;
 
     const key = token.slice(2);
-    const value = argv[index + 1];
+    const value = argv[i + 1];
 
     if (!value || value.startsWith("--")) {
       options[key] = true;
-      continue;
+    } else {
+      options[key] = value;
+      i++;
     }
-
-    options[key] = value;
-    index += 1;
   }
 
   return options;
@@ -39,86 +36,119 @@ function toSlug(value) {
 }
 
 function captionFromFileName(fileName) {
-  const baseName = path.parse(fileName).name;
-  return baseName
+  return path.parse(fileName).name
     .replace(/[_-]+/g, " ")
     .replace(/\s+/g, " ")
     .trim();
 }
 
-async function readImageFiles(sourceDir) {
-  const entries = await fs.readdir(sourceDir, { withFileTypes: true });
+async function readImageFiles(dir) {
+  const entries = await fs.readdir(dir, { withFileTypes: true });
+
   return entries
-    .filter((entry) => entry.isFile())
-    .map((entry) => entry.name)
-    .filter((fileName) => IMAGE_EXTENSIONS.has(path.extname(fileName).toLowerCase()))
-    .sort((a, b) => a.localeCompare(b, "pt-PT", { numeric: true, sensitivity: "base" }));
+    .filter(e => e.isFile())
+    .map(e => e.name)
+    .filter(name => IMAGE_EXTENSIONS.has(path.extname(name).toLowerCase()))
+    .sort((a, b) => a.localeCompare(b, "pt-PT", { numeric: true }));
 }
 
 async function ensureJson(filePath, fallback) {
   try {
-    const text = await fs.readFile(filePath, "utf8");
-    return JSON.parse(text);
-  } catch (_error) {
+    const data = await fs.readFile(filePath, "utf8");
+    return JSON.parse(data);
+  } catch {
     return fallback;
+  }
+}
+
+// detectar root do projeto via index.html
+async function findGalleryRoot(startDir) {
+  let current = startDir;
+
+  while (true) {
+    const galleryPath = path.join(current, "pages", "gallery");
+
+    try {
+      const stat = await fs.stat(galleryPath);
+      if (stat.isDirectory()) {
+        return current;
+      }
+    } catch (_) {}
+
+    const parent = path.dirname(current);
+
+    if (parent === current) {
+      throw new Error("Não foi possível encontrar pages/gallery no projeto.");
+    }
+
+    current = parent;
   }
 }
 
 async function main() {
   const args = parseArgs(process.argv.slice(2));
-  const cwd = process.cwd();
+
+  // root automático
+  const root = await findGalleryRoot(process.cwd());
+
   const defaultSourceDir = path.join(__dirname, "images");
 
-  const hasSourceFlag = Object.prototype.hasOwnProperty.call(args, "source")
-    || Object.prototype.hasOwnProperty.call(args, "src");
+  const hasSourceFlag =
+    Object.prototype.hasOwnProperty.call(args, "source") ||
+    Object.prototype.hasOwnProperty.call(args, "src");
+
   const sourceArg = args.source || args.src;
+
   if (hasSourceFlag && sourceArg === true) {
-    throw new Error("Flag --source/--src sem valor. Usa --source <pasta-com-imagens>.");
+    throw new Error("Usa --source <pasta-com-imagens>");
   }
 
-  const sourceDir = sourceArg && sourceArg !== true
-    ? path.resolve(cwd, String(sourceArg))
-    : defaultSourceDir;
-  const sourceStat = await fs.stat(sourceDir).catch(() => null);
-  if (!sourceStat || !sourceStat.isDirectory()) {
-    throw new Error(`Pasta de origem inválida: ${sourceDir}. Cria a pasta images ao lado deste script ou define --source.`);
+  // source relativo à pasta onde corres o comando
+  const sourceDir =
+    sourceArg && sourceArg !== true
+      ? path.resolve(process.cwd(), String(sourceArg))
+      : defaultSourceDir;
+
+  const stat = await fs.stat(sourceDir).catch(() => null);
+  if (!stat || !stat.isDirectory()) {
+    throw new Error(`Pasta inválida: ${sourceDir}`);
   }
 
-  const imageFiles = await readImageFiles(sourceDir);
-  if (imageFiles.length === 0) {
-    throw new Error("A pasta de origem não tem imagens suportadas (.jpg, .jpeg, .png, .webp, .gif, .avif).");
+  const files = await readImageFiles(sourceDir);
+  if (!files.length) {
+    throw new Error("Sem imagens na pasta.");
   }
 
-  const slugInput = args.slug && args.slug !== true ? args.slug : path.basename(sourceDir);
-  const slug = toSlug(slugInput);
-  if (!slug) {
-    throw new Error("Não foi possível gerar slug. Define --slug explicitamente.");
-  }
+  const slug = toSlug(args.slug || path.basename(sourceDir));
+  if (!slug) throw new Error("Slug inválido.");
 
-  const title = args.title && args.title !== true ? String(args.title) : slug.replace(/-/g, " ");
-  const date = args.date && args.date !== true ? String(args.date) : "";
-  const location = args.location && args.location !== true ? String(args.location) : "";
-  const description = args.description && args.description !== true ? String(args.description) : "";
+  const title = args.title || slug.replace(/-/g, " ");
+  const date = args.date || "";
+  const location = args.location || "";
+  const description = args.description || "";
 
-  const galleryRoot = path.resolve(cwd, "pages", "gallery");
+  const galleryRoot = path.join(root, "pages", "gallery");
+
   const competitionDir = path.join(galleryRoot, slug);
   const competitionJsonPath = path.join(galleryRoot, `${slug}.json`);
   const indexJsonPath = path.join(galleryRoot, "index.json");
 
   await fs.mkdir(competitionDir, { recursive: true });
 
-  for (const fileName of imageFiles) {
-    const from = path.join(sourceDir, fileName);
-    const to = path.join(competitionDir, fileName);
-    await fs.copyFile(from, to);
+  // copiar imagens
+  for (const file of files) {
+    await fs.copyFile(
+      path.join(sourceDir, file),
+      path.join(competitionDir, file)
+    );
   }
 
-  const images = imageFiles.map((fileName) => ({
-    url: `/pages/gallery/${slug}/${fileName}`,
-    caption: captionFromFileName(fileName),
+  const images = files.map(file => ({
+    url: `/pages/gallery/${slug}/${file}`,
+    caption: captionFromFileName(file),
   }));
 
-  const competitionJson = {
+  const competitionData = {
     title,
     date,
     location,
@@ -127,28 +157,36 @@ async function main() {
     images,
   };
 
-  await fs.writeFile(competitionJsonPath, `${JSON.stringify(competitionJson, null, 2)}\n`, "utf8");
+  await fs.writeFile(
+    competitionJsonPath,
+    JSON.stringify(competitionData, null, 2) + "\n"
+  );
 
-  const indexJson = await ensureJson(indexJsonPath, { competitions: [] });
-  if (!Array.isArray(indexJson.competitions)) {
-    indexJson.competitions = [];
+  const indexData = await ensureJson(indexJsonPath, { competitions: [] });
+
+  if (!Array.isArray(indexData.competitions)) {
+    indexData.competitions = [];
   }
 
   const fileName = `${slug}.json`;
-  if (!indexJson.competitions.includes(fileName)) {
-    indexJson.competitions.push(fileName);
+
+  if (!indexData.competitions.includes(fileName)) {
+    indexData.competitions.push(fileName);
   }
 
-  await fs.writeFile(indexJsonPath, `${JSON.stringify(indexJson, null, 2)}\n`, "utf8");
+  await fs.writeFile(
+    indexJsonPath,
+    JSON.stringify(indexData, null, 2) + "\n"
+  );
 
   console.log("Galeria criada com sucesso.");
   console.log(`Slug: ${slug}`);
   console.log(`Pasta: ${competitionDir}`);
-  console.log(`JSON: ${competitionJsonPath}`);
+  console.log(`Index atualizado: ${indexJsonPath}`);
   console.log(`Total de imagens: ${images.length}`);
 }
 
-main().catch((error) => {
-  console.error("Erro ao criar galeria:", error.message);
-  process.exitCode = 1;
+main().catch(err => {
+  console.error("Erro:", err.message);
+  process.exit(1);
 });
