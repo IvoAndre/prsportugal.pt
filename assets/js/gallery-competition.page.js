@@ -142,8 +142,8 @@ function render(info, slug) {
 
       const src = escapeHtml(String(source));
       const caption = typeof image === "object" && typeof image?.caption === "string" ? image.caption : "";
-      const alt = escapeHtml(caption || `${name} - fotografia ${index + 1}`);
-        const safeCaption = escapeHtml(caption || `${name} - fotografia ${index + 1}`);
+      const alt = escapeHtml(caption || `${name} - Fotografia ${index + 1}`);
+        const safeCaption = escapeHtml(caption || `${name} - Fotografia ${index + 1}`);
 
         return `<a href="${src}" target="_blank" rel="noopener noreferrer" data-lightbox-src="${src}" data-caption="${safeCaption}" data-alt="${alt}"><img src="${src}" alt="${alt}" loading="lazy" /></a>`;
     })
