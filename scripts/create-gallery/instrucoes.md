@@ -2,26 +2,8 @@
 
 Existe um script simples para criar uma galeria completa (pasta de imagens + JSON da competicao + atualizacao do index):
 
-```bash
-node scripts/create-gallery/create-gallery.js --source "caminho/para/pasta-de-imagens" --slug competicao2 --title "Competicao 2" --date 2026-05-01 --location "Lisboa" --description "Prova regional"
 ```
-
-Exemplo com capa definida pelo nome do ficheiro:
-
-```bash
-node scripts/create-gallery/create-gallery.js --source "./1Prova2026" --slug 1Prova2026 --title "1ª Prova 2026" --cover "__capaprova1.jpg"
-```
-
-Exemplo sem --source (usa por defeito a pasta images ao lado do script):
-
-```bash
-node scripts/create-gallery/create-gallery.js --slug competicao2 --title "Competicao 2"
-```
-
-Exemplo com --source (usa o nome da pasta para gerar o slug):
-
-```bash
-node scripts/create-gallery/create-gallery.js --source "pages/gallery/fotos-novas" --title "Taça PRS"
+ node create-gallery.js --source "./1Prova2026" --cover "capaprova1.jpg" --slug 1Prova2026 --title "1ª Prova 2026" --date 2026-02 --location "Portugal" --description "Galeria fotográfica da 1ª prova de 2026"
 ```
 
 Opcoes disponiveis:
