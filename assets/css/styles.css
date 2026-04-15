@@ -45,6 +45,18 @@ body {
   flex-direction: column;
 }
 
+body:not(.page-ready) {
+  opacity: 0;
+  visibility: hidden;
+  overflow: hidden;
+}
+
+body.page-ready {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.2s ease;
+}
+
 main {
   flex: 1;
 }
@@ -447,7 +459,7 @@ h2 {
 }
 
 .footer-links a {
-  color: var(--green);
+  color: var(--text);
   text-decoration: none;
   font-weight: 700;
 }
@@ -458,6 +470,8 @@ h2 {
   justify-content: center;
   width: 34px;
   height: 34px;
+  padding: 0;
+  line-height: 1;
   border: 1px solid var(--line);
   border-radius: 999px;
   background: var(--surface);
@@ -470,10 +484,22 @@ h2 {
   justify-content: center;
   width: 34px;
   height: 34px;
+  padding: 0;
+  line-height: 1;
   border: 1px solid var(--line);
   border-radius: 999px;
   background: var(--surface);
   font-size: 1rem;
+}
+
+.instagram-link i,
+.instagram-link svg,
+.facebook-link i,
+.facebook-link svg {
+  display: block;
+  width: 1em;
+  height: 1em;
+  line-height: 1;
 }
 
 .theme-toggle {

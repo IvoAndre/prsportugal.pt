@@ -130,33 +130,52 @@ function initMobileNav() {
   });
 }
 
+function revealPageWhenLoaded() {
+  const reveal = () => {
+    document.body.classList.add("page-ready");
+  };
+
+  if (document.readyState === "complete") {
+    window.requestAnimationFrame(reveal);
+    return;
+  }
+
+  window.addEventListener("load", () => {
+    window.requestAnimationFrame(reveal);
+  }, { once: true });
+}
+
 export async function loadSharedComponents() {
   const basePath = document.body.dataset.base || ".";
   const activePage = document.body.dataset.page || "";
 
-  const headerSlot = document.getElementById("site-header");
-  const footerSlot = document.getElementById("site-footer");
+  try {
+    const headerSlot = document.getElementById("site-header");
+    const footerSlot = document.getElementById("site-footer");
 
-  if (!headerSlot || !footerSlot) {
-    throw new Error("Faltam placeholders #site-header ou #site-footer.");
+    if (!headerSlot || !footerSlot) {
+      throw new Error("Faltam placeholders #site-header ou #site-footer.");
+    }
+
+    const [navbarHtml, footerHtml] = await Promise.all([
+      loadPartial(`${basePath}/components/navbar.html`),
+      loadPartial(`${basePath}/components/footer.html`)
+    ]);
+
+    headerSlot.innerHTML = applyBasePath(navbarHtml, basePath);
+    footerSlot.innerHTML = applyBasePath(footerHtml, basePath);
+
+    const year = document.getElementById("year");
+    if (year) {
+      year.textContent = String(new Date().getFullYear());
+    }
+
+    setActiveNavigation(activePage);
+    initMobileNav();
+    initFontAwesome();
+    initThemeToggle(basePath);
+    initGoogleTranslate();
+  } finally {
+    revealPageWhenLoaded();
   }
-
-  const [navbarHtml, footerHtml] = await Promise.all([
-    loadPartial(`${basePath}/components/navbar.html`),
-    loadPartial(`${basePath}/components/footer.html`)
-  ]);
-
-  headerSlot.innerHTML = applyBasePath(navbarHtml, basePath);
-  footerSlot.innerHTML = applyBasePath(footerHtml, basePath);
-
-  const year = document.getElementById("year");
-  if (year) {
-    year.textContent = String(new Date().getFullYear());
-  }
-
-  setActiveNavigation(activePage);
-  initMobileNav();
-  initFontAwesome();
-  initThemeToggle(basePath);
-  initGoogleTranslate();
 }
