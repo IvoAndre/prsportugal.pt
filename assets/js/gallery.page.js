@@ -59,7 +59,7 @@ function cardTemplate(slug, info) {
       <h2>${title}</h2>
       <p class="muted">${date} - ${location}</p>
       <p>${count} fotografia(s)</p>
-      <a class="btn btn-secondary" href="gallery/competicao.html?slug=${encodeURIComponent(slug)}">Abrir galeria</a>
+      <a class="btn btn-secondary" href="./competicao/?slug=${encodeURIComponent(slug)}">Abrir galeria</a>
     </article>
   `;
 }
@@ -81,14 +81,15 @@ async function loadGalleryList() {
   }
 
   try {
-    const indexPath = config.gallery?.indexPath || "pages/gallery/index.json";
-    const index = await fetchJson(`../${indexPath}`);
+    const indexPath = String(config.gallery?.indexPath || "galeria/provas/index.json").replace(/^\/+/, "");
+    const galleryDataDir = indexPath.replace(/\/[^/]+$/, "");
+    const index = await fetchJson(`${basePath}/${indexPath}`);
     const files = Array.isArray(index.competitions) ? index.competitions : [];
 
     if (files.length === 0) {
       empty.hidden = false;
       host.innerHTML = "";
-      empty.textContent = "Sem galerias disponíveis. Atualiza o pages/gallery/index.json.";
+      empty.textContent = "Sem galerias disponíveis. Atualiza o galeria/provas/index.json.";
       return;
     }
 
@@ -97,7 +98,7 @@ async function loadGalleryList() {
         const fileName = String(entry);
         const slug = fileName.replace(/\.json$/i, "");
         try {
-          const info = await fetchJson(`./gallery/${encodeURIComponent(fileName)}`);
+          const info = await fetchJson(`${basePath}/${galleryDataDir}/${encodeURIComponent(fileName)}`);
           return { slug, info };
         } catch (_error) {
           return { slug, info: {} };

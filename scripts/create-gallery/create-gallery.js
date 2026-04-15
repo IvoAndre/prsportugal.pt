@@ -54,12 +54,12 @@ async function ensureJson(filePath, fallback) {
   }
 }
 
-// detectar root do projeto via index.html
+// detectar root do projeto via pasta de galeria
 async function findGalleryRoot(startDir) {
   let current = startDir;
 
   while (true) {
-    const galleryPath = path.join(current, "pages", "gallery");
+    const galleryPath = path.join(current, "galeria", "provas");
 
     try {
       const stat = await fs.stat(galleryPath);
@@ -71,7 +71,7 @@ async function findGalleryRoot(startDir) {
     const parent = path.dirname(current);
 
     if (parent === current) {
-      throw new Error("Não foi possível encontrar pages/gallery no projeto.");
+      throw new Error("Não foi possível encontrar galeria/provas no projeto.");
     }
 
     current = parent;
@@ -125,7 +125,7 @@ async function main() {
     throw new Error("Usa --cover <nome-do-ficheiro>.");
   }
 
-  const galleryRoot = path.join(root, "pages", "gallery");
+  const galleryRoot = path.join(root, "galeria", "provas");
 
   const competitionDir = path.join(galleryRoot, slug);
   const competitionJsonPath = path.join(galleryRoot, `${slug}.json`);
@@ -142,7 +142,7 @@ async function main() {
   }
 
   const images = files.map(file => ({
-    url: `pages/gallery/${slug}/${file}`,
+    url: `galeria/provas/${slug}/${file}`,
   }));
 
   let thumbnailFile = files[0];
@@ -162,7 +162,7 @@ async function main() {
     date,
     location,
     description,
-    thumbnail: `pages/gallery/${slug}/${thumbnailFile}`,
+    thumbnail: `galeria/provas/${slug}/${thumbnailFile}`,
     images,
   };
 

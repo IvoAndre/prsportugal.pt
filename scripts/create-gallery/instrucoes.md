@@ -18,7 +18,7 @@ Opcoes disponiveis:
 
 O script:
 
-- Copia todas as imagens suportadas (`.jpg`, `.jpeg`, `.png`, `.webp`, `.gif`, `.avif`) para `pages/gallery/<slug>/`.
-- Gera `pages/gallery/<slug>.json` no formato usado pelo site.
-- Atualiza `pages/gallery/index.json` sem duplicar entradas.
+- Copia todas as imagens suportadas (`.jpg`, `.jpeg`, `.png`, `.webp`, `.gif`, `.avif`) para `galeria/provas/<slug>/`.
+- Gera `galeria/provas/<slug>.json` no formato usado pelo site.
+- Atualiza `galeria/provas/index.json` sem duplicar entradas.
 - Não gera captions automaticamente a partir do nome do ficheiro.

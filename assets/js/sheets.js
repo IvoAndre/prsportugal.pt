@@ -57,8 +57,13 @@ function normalizeCoverPath(value) {
     return source;
   }
 
-  const normalized = source.replaceAll("\\", "/").replace(/^\/+/, "");
-  const galleryMatch = normalized.match(/^(pages\/gallery\/)([^/]+)(\/.*)$/i);
+  const normalized = source
+    .replaceAll("\\", "/")
+    .replace(/^\/+/, "")
+    .replace(/^pages\/gallery\//i, "galeria/provas/")
+    .replace(/^pages\/galeria\//i, "galeria/provas/")
+    .replace(/^galeria\/(?!provas\/)/i, "galeria/provas/");
+  const galleryMatch = normalized.match(/^(galeria\/provas\/)([^/]+)(\/.*)$/i);
 
   if (!galleryMatch) {
     return normalized;

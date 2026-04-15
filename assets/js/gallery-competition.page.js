@@ -40,7 +40,7 @@ function formatDate(value) {
 }
 
 async function fetchInfo(slug) {
-  const response = await fetch(`./${encodeURIComponent(slug)}.json`, { cache: "no-store" });
+  const response = await fetch(`../provas/${encodeURIComponent(slug)}.json`, { cache: "no-store" });
   if (!response.ok) {
     throw new Error("Falha ao carregar dados da competição.");
   }
