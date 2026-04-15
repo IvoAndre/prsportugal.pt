@@ -3,7 +3,7 @@ import { initEventsUi } from "./main.js";
 
 async function bootstrap() {
   await loadSharedComponents();
-  await initEventsUi();
+  await initEventsUi({ showTrainingsInCalendar: false });
 }
 
 bootstrap();

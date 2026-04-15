@@ -47,6 +47,24 @@ function normalizeHeader(value) {
     .replace(/[\u0300-\u036f]/g, "");
 }
 
+function normalizeEventType(value) {
+  const normalized = normalizeHeader(value);
+
+  if (!normalized) {
+    return "competicao";
+  }
+
+  if (["treino", "treinos", "training", "trainings"].includes(normalized)) {
+    return "treino";
+  }
+
+  if (["competicao", "competicoes", "competicaoes", "competition", "competitions"].includes(normalized)) {
+    return "competicao";
+  }
+
+  return "competicao";
+}
+
 function normalizeCoverPath(value) {
   const source = String(value || "").trim();
   if (!source) {
@@ -89,7 +107,8 @@ function resolveColumnIndexes(table) {
     date: byLabel.get("data") ?? -1,
     name: byLabel.get("nome") ?? -1,
     country: byLabel.get("pais") ?? -1,
-    link: byLabel.get("link") ?? -1
+    link: byLabel.get("link") ?? -1,
+    type: byLabel.get("tipo") ?? -1
   };
 }
 
@@ -133,6 +152,7 @@ export async function fetchEventsFromSheet(config) {
       const country = col.country >= 0 ? readCell(cells[col.country]) : "";
       const registrationUrl = col.link >= 0 ? readCell(cells[col.link]) : "";
       const coverImageUrl = col.cover >= 0 ? normalizeCoverPath(readCell(cells[col.cover])) : "";
+      const type = col.type >= 0 ? normalizeEventType(readCell(cells[col.type])) : "competicao";
 
       const date = parseGoogleDate(dateValue) || parseGoogleDate(dateDisplay);
 
@@ -146,7 +166,8 @@ export async function fetchEventsFromSheet(config) {
         date,
         location: country,
         registrationUrl,
-        coverImageUrl
+        coverImageUrl,
+        type
       };
     })
     .filter(Boolean)

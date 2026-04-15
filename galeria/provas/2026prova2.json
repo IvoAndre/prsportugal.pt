@@ -1,0 +1,34 @@
+{
+  "title": "2ª Prova 2026",
+  "date": "2026-03",
+  "location": "Portugal",
+  "description": "Galeria fotográfica da 2ª prova de 2026",
+  "folder": "2026prova2",
+  "thumbnail": "capaprova2.jpg",
+  "images": [
+    {
+      "url": "_MTK8519.jpg"
+    },
+    {
+      "url": "_MTK8520.jpg"
+    },
+    {
+      "url": "_MTK8521.jpg"
+    },
+    {
+      "url": "_MTK8526.jpg"
+    },
+    {
+      "url": "_MTK8530.jpg"
+    },
+    {
+      "url": "_MTK8544.jpg"
+    },
+    {
+      "url": "_MTK9005.jpg"
+    },
+    {
+      "url": "_MTK9475.jpg"
+    }
+  ]
+}

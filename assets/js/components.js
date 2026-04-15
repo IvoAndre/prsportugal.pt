@@ -4,6 +4,7 @@ const THEME_STORAGE_KEY = "prs-theme";
 const FONT_AWESOME_KIT_URL = "https://kit.fontawesome.com/63ee9bf6ef.js";
 const LOGO_LIGHT_FILE = "LOGO_DEITADO_ASSOCIAÇÃO_LETRA_PRETA.png";
 const LOGO_DARK_FILE = "LOGO_DEITADO_ASSOCIAÇÃO_LETRA_BRANCA.png";
+const GLOBAL_IMAGE_SELECTOR = 'img:not(.js-gallery-media):not([data-image-effect="off"])';
 
 function initFontAwesome() {
   if (document.querySelector('script[data-prs-fa="true"]')) {
@@ -51,6 +52,30 @@ function getPreferredTheme() {
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
+function initGlobalImageLoading(root = document) {
+  const images = root.querySelectorAll(GLOBAL_IMAGE_SELECTOR);
+
+  images.forEach((image) => {
+    image.classList.add("js-image-load-fx");
+
+    if (image.dataset.imageFxBound !== "true") {
+      const markLoaded = () => {
+        image.classList.add("is-loaded");
+      };
+
+      image.addEventListener("load", markLoaded);
+      image.addEventListener("error", markLoaded);
+      image.dataset.imageFxBound = "true";
+    }
+
+    if (image.complete) {
+      image.classList.add("is-loaded");
+    } else {
+      image.classList.remove("is-loaded");
+    }
+  });
+}
+
 function applyTheme(theme, basePath = ".") {
   document.documentElement.setAttribute("data-theme", theme);
 
@@ -60,6 +85,7 @@ function applyTheme(theme, basePath = ".") {
   const iconPath = `${basePath}/assets/images/favicon.png`;
 
   document.querySelectorAll(".brand-logo, .footer-logo").forEach((logo) => {
+    logo.classList.remove("is-loaded");
     logo.setAttribute("src", logoPath);
   });
 
@@ -76,6 +102,8 @@ function applyTheme(theme, basePath = ".") {
     toggle.setAttribute("aria-label", isDark ? "Ativar modo claro" : "Ativar modo escuro");
     toggle.setAttribute("title", isDark ? "Ativar modo claro" : "Ativar modo escuro");
   }
+
+  initGlobalImageLoading();
 }
 
 function initThemeToggle(basePath) {
@@ -130,6 +158,20 @@ function initMobileNav() {
   });
 }
 
+function initBackToTop() {
+  const button = document.getElementById("back-to-top");
+  if (!button) {
+    return;
+  }
+
+  button.addEventListener("click", () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  });
+}
+
 function revealPageWhenLoaded() {
   const reveal = () => {
     document.body.classList.add("page-ready");
@@ -172,7 +214,9 @@ export async function loadSharedComponents() {
 
     setActiveNavigation(activePage);
     initMobileNav();
+    initBackToTop();
     initFontAwesome();
+    initGlobalImageLoading();
     initThemeToggle(basePath);
     initGoogleTranslate();
   } finally {

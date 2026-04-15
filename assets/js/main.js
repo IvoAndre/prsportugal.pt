@@ -12,6 +12,7 @@ const nextEventWhen = document.getElementById("next-event-when");
 const nextEventCountdown = document.getElementById("next-event-countdown");
 
 let liveEvents = [];
+let liveCompetitionEvents = [];
 
 function escapeHtml(value) {
   return String(value)
@@ -23,12 +24,23 @@ function escapeHtml(value) {
 }
 
 function formatDate(date) {
-  const formatted = new Intl.DateTimeFormat(locale, {
-    dateStyle: "full",
-    timeStyle: "short"
-  }).format(date);
+  const hasTime =
+    date.getHours() !== 0 ||
+    date.getMinutes() !== 0 ||
+    date.getSeconds() !== 0 ||
+    date.getMilliseconds() !== 0;
+
+  const formatterOptions = hasTime
+    ? { dateStyle: "full", timeStyle: "short" }
+    : { dateStyle: "full" };
+
+  const formatted = new Intl.DateTimeFormat(locale, formatterOptions).format(date);
 
   return formatted.charAt(0).toLocaleUpperCase(locale) + formatted.slice(1);
+}
+
+function isCompetitionEvent(event) {
+  return (event?.type || "competicao") === "competicao";
 }
 
 function resolveSiteUrl(value) {
@@ -43,6 +55,29 @@ function resolveSiteUrl(value) {
 
   const normalized = source.startsWith("/") ? source.slice(1) : source;
   return `${basePath}/${normalized}`;
+}
+
+function initImageLoadFx(root) {
+  if (!root) {
+    return;
+  }
+
+  const images = root.querySelectorAll("img.js-image-load-fx");
+  images.forEach((image) => {
+    if (image.dataset.imageFxBound !== "true") {
+      const markLoaded = () => {
+        image.classList.add("is-loaded");
+      };
+
+      image.addEventListener("load", markLoaded);
+      image.addEventListener("error", markLoaded);
+      image.dataset.imageFxBound = "true";
+    }
+
+    if (image.complete) {
+      image.classList.add("is-loaded");
+    }
+  });
 }
 
 function eventRowTemplate(event) {
@@ -69,13 +104,13 @@ function renderHeroCountdown() {
     return;
   }
 
-  if (liveEvents.length === 0) {
+  if (liveCompetitionEvents.length === 0) {
     nextEventCountdown.innerHTML = "";
     return;
   }
 
   const now = new Date();
-  const next = liveEvents.find((e) => e.date > now) || liveEvents[0];
+  const next = liveCompetitionEvents.find((e) => e.date > now) || liveCompetitionEvents[0];
   const cd = calculateCountdown(next.date);
   const [d, h, m, s] = formatCountdownParts(cd);
 
@@ -92,7 +127,7 @@ function renderHeroNextEvent() {
     return;
   }
 
-  if (liveEvents.length === 0) {
+  if (liveCompetitionEvents.length === 0) {
     nextEventName.textContent = "Sem provas previstas";
     nextEventWhen.textContent = "Consulta novamente em breve para novas datas.";
     nextEventCountdown.innerHTML = "";
@@ -100,7 +135,7 @@ function renderHeroNextEvent() {
   }
 
   const now = new Date();
-  const next = liveEvents.find((e) => e.date > now) || liveEvents[0];
+  const next = liveCompetitionEvents.find((e) => e.date > now) || liveCompetitionEvents[0];
 
   nextEventName.textContent = next.name;
   nextEventWhen.textContent = `${formatDate(next.date)}${next.location ? ` - ${next.location}` : ""}`;
@@ -116,13 +151,13 @@ function renderNextEventHighlight() {
 
   if (!container) return;
 
-  if (liveEvents.length === 0) {
+  if (liveCompetitionEvents.length === 0) {
     container.innerHTML = `<p class="muted">Sem competições disponíveis.</p>`;
     return;
   }
 
   const now = new Date();
-  const next = liveEvents.find((e) => e.date > now) || liveEvents[0];
+  const next = liveCompetitionEvents.find((e) => e.date > now) || liveCompetitionEvents[0];
 
   const safeName = escapeHtml(next.name);
   const safeLocation = escapeHtml(next.location || "Local por anunciar");
@@ -139,10 +174,11 @@ function renderNextEventHighlight() {
           : ""
       }
     </div>
-    ${safeCoverImageUrl ? `<img class="event-highlight-cover" src="${safeCoverImageUrl}" alt="Capa da competição ${safeName}" loading="lazy" />` : ""}
+    ${safeCoverImageUrl ? `<img class="event-highlight-cover js-image-load-fx" src="${safeCoverImageUrl}" alt="Capa da competição ${safeName}" loading="lazy" />` : ""}
   `;
 
   container.className = highlightClasses;
+  initImageLoadFx(container);
 }
 
 function renderEvents() {
@@ -169,15 +205,19 @@ function tickHeroCountdown() {
   renderHeroNextEvent();
 }
 
-export async function initEventsUi() {
+export async function initEventsUi(options = {}) {
   if (!eventsGrid || !emptyState) {
     return;
   }
 
+  const showTrainingsInCalendar = Boolean(options.showTrainingsInCalendar);
+
   try {
     const allEvents = await fetchEventsFromSheet(config.countdownSheet || {});
     const now = new Date();
-    liveEvents = allEvents.filter((event) => event.date.getTime() > now.getTime());
+    const upcomingEvents = allEvents.filter((event) => event.date.getTime() > now.getTime());
+    liveCompetitionEvents = upcomingEvents.filter(isCompetitionEvent);
+    liveEvents = showTrainingsInCalendar ? upcomingEvents : liveCompetitionEvents;
     renderEvents();
   } catch (error) {
     emptyState.hidden = false;

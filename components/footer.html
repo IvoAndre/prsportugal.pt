@@ -2,7 +2,10 @@
   <div class="container footer-content">
     <div class="footer-brand">
       <img class="footer-logo" src="{{BASE}}/assets/images/LOGO_DEITADO_ASSOCIAÇÃO_LETRA_PRETA.png" alt="Logo PRS Portugal" />
-      <small>© <span id="year"></span> PRS - Precision Rifle Series Portugal. Todos os direitos reservados.</small>
+      <div class="footer-text">
+        <small>© <span id="year"></span> Pprsa - Portuguese Precision Rifle Series Association. Todos os direitos reservados.</small>
+        <small>Feito com <i class="fa-solid fa-gun" aria-hidden="true"></i> por <a href="https://rivodani.com/portfolio" target="_blank" rel="noopener noreferrer">Ivo André</a> e <a href="https://github.com/joaolpfig" target="_blank" rel="noopener noreferrer">João Figueiredo</a></small>
+      </div>
     </div>
     <div class="footer-links">
       <a href="{{BASE}}/legal/">Legal</a>
@@ -12,17 +15,20 @@
       <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Ativar modo escuro" title="Ativar modo escuro">
         <i class="fa-regular fa-moon" aria-hidden="true"></i>
       </button>
-      <label class="language-control" for="language-switcher">
-        <span>Idioma</span>
-        <select id="language-switcher" class="language-switcher" aria-label="Selecionar idioma">
-          <option value="pt">Português</option>
-          <option value="en">English</option>
-          <option value="es">Español</option>
-          <option value="fr">Français</option>
-          <option value="de">Deutsch</option>
-          <option value="it">Italiano</option>
-        </select>
-      </label>
+      <button id="back-to-top" class="back-to-top" type="button" aria-label="Voltar ao topo" title="Voltar ao topo">
+        <i class="fa-solid fa-arrow-up" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <div class="language-floating-control notranslate" aria-label="Idioma" translate="no">
+      <select id="language-switcher" class="language-switcher language-switcher-overlay notranslate" aria-label="Selecionar idioma" translate="no">
+        <option value="pt" translate="no">🇵🇹 PT</option>
+        <option value="en" translate="no">🇬🇧 EN</option>
+        <option value="es" translate="no">🇪🇸 ES</option>
+        <option value="fr" translate="no">🇫🇷 FR</option>
+        <option value="de" translate="no">🇩🇪 DE</option>
+        <option value="it" translate="no">🇮🇹 IT</option>
+      </select>
     </div>
     <div id="google_translate_element" class="translate-hidden" aria-hidden="true"></div>
   </div>

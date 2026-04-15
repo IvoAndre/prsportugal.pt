@@ -17,6 +17,28 @@ function resolveSiteUrl(value) {
   return `${basePath}/${normalized}`;
 }
 
+function resolveGalleryMediaUrl(value, slug, folderOverride = "") {
+  const source = String(value || "").trim();
+  if (!source) {
+    return "";
+  }
+
+  if (/^(?:[a-z]+:)?\/\//i.test(source) || source.startsWith("data:") || source.startsWith("blob:")) {
+    return source;
+  }
+
+  if (source.includes("/")) {
+    return resolveSiteUrl(source);
+  }
+
+  const folder = String(folderOverride || slug || "").trim();
+  if (!folder) {
+    return resolveSiteUrl(source);
+  }
+
+  return resolveSiteUrl(`galeria/provas/${folder}/${source}`);
+}
+
 function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
@@ -40,20 +62,44 @@ function formatDate(value) {
   return formatted.charAt(0).toLocaleUpperCase("pt-PT") + formatted.slice(1);
 }
 
+function initElegantImageLoading(root = document) {
+  const images = root.querySelectorAll("img.js-gallery-media");
+
+  images.forEach((image) => {
+    const shell = image.closest(".gallery-media-shell");
+    if (!shell) {
+      return;
+    }
+
+    const markLoaded = () => {
+      shell.classList.add("is-loaded");
+    };
+
+    if (image.complete) {
+      markLoaded();
+      return;
+    }
+
+    image.addEventListener("load", markLoaded, { once: true });
+    image.addEventListener("error", markLoaded, { once: true });
+  });
+}
+
 function cardTemplate(slug, info) {
   const title = escapeHtml(info.title || slug);
   const location = escapeHtml(info.location || "Local por anunciar");
   const date = formatDate(info.date);
   const count = Array.isArray(info.images) ? info.images.length : 0;
+  const folder = typeof info.folder === "string" ? info.folder.trim() : "";
   const thumbnail = typeof info.thumbnail === "string" ? info.thumbnail.trim() : "";
-  const thumbUrl = resolveSiteUrl(thumbnail);
+  const thumbUrl = resolveGalleryMediaUrl(thumbnail, slug, folder);
   const safeThumb = thumbUrl ? escapeHtml(thumbUrl) : "";
 
   return `
     <article class="gallery-card">
       ${
         safeThumb
-          ? `<img class="gallery-card-thumb" src="${safeThumb}" alt="Thumbnail de ${title}" loading="lazy" />`
+          ? `<div class="gallery-media-shell gallery-card-thumb-shell"><img class="gallery-card-thumb js-gallery-media" src="${safeThumb}" alt="Thumbnail de ${title}" loading="lazy" /></div>`
           : ""
       }
       <h2>${title}</h2>
@@ -107,6 +153,7 @@ async function loadGalleryList() {
     );
 
     host.innerHTML = infos.map(({ slug, info }) => cardTemplate(slug, info)).join("");
+    initElegantImageLoading(host);
     empty.hidden = true;
   } catch (_error) {
     empty.hidden = false;

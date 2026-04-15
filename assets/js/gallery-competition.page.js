@@ -16,6 +16,28 @@ function resolveSiteUrl(value) {
   return `${basePath}/${normalized}`;
 }
 
+function resolveGalleryMediaUrl(value, slug, folderOverride = "") {
+  const source = String(value || "").trim();
+  if (!source) {
+    return "";
+  }
+
+  if (/^(?:[a-z]+:)?\/\//i.test(source) || source.startsWith("data:") || source.startsWith("blob:")) {
+    return source;
+  }
+
+  if (source.includes("/")) {
+    return resolveSiteUrl(source);
+  }
+
+  const folder = String(folderOverride || slug || "").trim();
+  if (!folder) {
+    return resolveSiteUrl(source);
+  }
+
+  return resolveSiteUrl(`galeria/provas/${folder}/${source}`);
+}
+
 function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
@@ -37,6 +59,29 @@ function formatDate(value) {
 
   const formatted = new Intl.DateTimeFormat("pt-PT", { dateStyle: "long" }).format(parsed);
   return formatted.charAt(0).toLocaleUpperCase("pt-PT") + formatted.slice(1);
+}
+
+function initElegantImageLoading(root = document) {
+  const images = root.querySelectorAll("img.js-gallery-media");
+
+  images.forEach((image) => {
+    const shell = image.closest(".gallery-media-shell");
+    if (!shell) {
+      return;
+    }
+
+    const markLoaded = () => {
+      shell.classList.add("is-loaded");
+    };
+
+    if (image.complete) {
+      markLoaded();
+      return;
+    }
+
+    image.addEventListener("load", markLoaded, { once: true });
+    image.addEventListener("error", markLoaded, { once: true });
+  });
 }
 
 async function fetchInfo(slug) {
@@ -135,6 +180,7 @@ function render(info, slug) {
   }
 
   const name = info.title || slug;
+  const folder = typeof info.folder === "string" ? info.folder.trim() : "";
   title.textContent = name;
 
   const location = info.location ? ` - ${info.location}` : "";
@@ -156,15 +202,16 @@ function render(info, slug) {
         return "";
       }
 
-      const src = escapeHtml(resolveSiteUrl(String(source)));
+      const src = escapeHtml(resolveGalleryMediaUrl(String(source), slug, folder));
       const caption = typeof image === "object" && typeof image?.caption === "string" ? image.caption : "";
       const alt = escapeHtml(caption || `${name} - Fotografia ${index + 1}`);
         const safeCaption = escapeHtml(caption || `${name} - Fotografia ${index + 1}`);
 
-        return `<a href="${src}" target="_blank" rel="noopener noreferrer" data-lightbox-src="${src}" data-caption="${safeCaption}" data-alt="${alt}"><img src="${src}" alt="${alt}" loading="lazy" /></a>`;
+        return `<a class="gallery-media-shell" href="${src}" target="_blank" rel="noopener noreferrer" data-lightbox-src="${src}" data-caption="${safeCaption}" data-alt="${alt}"><img class="js-gallery-media" src="${src}" alt="${alt}" loading="lazy" /></a>`;
     })
     .join("");
 
+      initElegantImageLoading(photos);
       initLightbox();
 }
 

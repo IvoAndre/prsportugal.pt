@@ -21,4 +21,6 @@ O script:
 - Copia todas as imagens suportadas (`.jpg`, `.jpeg`, `.png`, `.webp`, `.gif`, `.avif`) para `galeria/provas/<slug>/`.
 - Gera `galeria/provas/<slug>.json` no formato usado pelo site.
 - Atualiza `galeria/provas/index.json` sem duplicar entradas.
+- Guarda `thumbnail` e `images[].url` apenas com o nome do ficheiro (ex: `foto1.jpg`).
+- Se precisares, podes usar manualmente um caminho completo (ex: `galeria/provas/outra-pasta/foto.jpg`) ou URL absoluta (`https://...`) e o site continua a suportar.
 - Não gera captions automaticamente a partir do nome do ficheiro.
