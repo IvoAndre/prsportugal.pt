@@ -676,6 +676,11 @@ h2 {
   background: color-mix(in srgb, var(--surface) 92%, transparent);
   box-shadow: var(--shadow);
   backdrop-filter: blur(6px);
+  transition: transform 0.2s ease;
+}
+
+.language-floating-control.is-footer-visible {
+  transform: translateY(-4.2rem);
 }
 
 .language-switcher-overlay {
@@ -799,6 +804,10 @@ h2 {
     right: 0.6rem;
     bottom: 0.6rem;
     padding: 0.3rem;
+  }
+
+  .language-floating-control.is-footer-visible {
+    transform: translateY(-4.6rem);
   }
 
   .language-switcher-overlay {

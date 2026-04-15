@@ -172,6 +172,24 @@ function initBackToTop() {
   });
 }
 
+function initFloatingLanguageControl() {
+  const floatingControl = document.querySelector(".language-floating-control");
+  const footer = document.querySelector(".site-footer");
+
+  if (!floatingControl || !footer || typeof IntersectionObserver === "undefined") {
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    const isFooterVisible = entries.some((entry) => entry.isIntersecting);
+    floatingControl.classList.toggle("is-footer-visible", isFooterVisible);
+  }, {
+    threshold: 0.01
+  });
+
+  observer.observe(footer);
+}
+
 function revealPageWhenLoaded() {
   const reveal = () => {
     document.body.classList.add("page-ready");
@@ -219,6 +237,7 @@ export async function loadSharedComponents() {
     initGlobalImageLoading();
     initThemeToggle(basePath);
     initGoogleTranslate();
+    initFloatingLanguageControl();
   } finally {
     revealPageWhenLoaded();
   }
