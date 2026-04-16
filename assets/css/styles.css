@@ -563,7 +563,7 @@ h2 {
   font-weight: 700;
 }
 
-.instagram-link {
+.prs-social-instagram {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -591,8 +591,8 @@ h2 {
   font-size: 1rem;
 }
 
-.instagram-link i,
-.instagram-link svg,
+.prs-social-instagram i,
+.prs-social-instagram svg,
 .facebook-link i,
 .facebook-link svg {
   display: block;
@@ -623,7 +623,7 @@ h2 {
   line-height: 1;
 }
 
-.back-to-top {
+.prs-scroll-top {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -639,8 +639,8 @@ h2 {
   cursor: pointer;
 }
 
-.back-to-top i,
-.back-to-top svg {
+.prs-scroll-top i,
+.prs-scroll-top svg {
   display: block;
   width: 1em;
   height: 1em;
