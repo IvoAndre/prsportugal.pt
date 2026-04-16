@@ -1,89 +1,94 @@
 <!doctype html>
 <html lang="pt-PT">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Competições | PRS Portugal</title>
-    <link rel="icon" type="image/png" href="../assets/images/favicon.png" />
-    <script>
-      (function () {
-        try {
-          const saved = localStorage.getItem("prs-theme");
-          const theme =
-            saved === "light" || saved === "dark"
-              ? saved
-              : window.matchMedia("(prefers-color-scheme: dark)").matches
-                ? "dark"
-                : "light";
-          document.documentElement.setAttribute("data-theme", theme);
-        } catch (_) {}
-      })();
-    </script>
-    <link rel="stylesheet" href="../assets/css/styles.css" />
-    <script src="../config/site.config.js"></script>
-    <link rel="preconnect" href="https://docs.google.com" />
-  </head>
-  <body data-base=".." data-page="competicoes">
-    <div id="site-header"></div>
 
-    <main>
-  <!-- HERO -->
-  <section class="page-hero">
-    <div class="container">
-      <p class="kicker">Calendário</p>
-      <h1 class="page-title">Competições PRS Portugal</h1>
-      <p class="lead">Lista oficial de todas as competições futuras.</p>
-    </div>
-  </section>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Competições | PRS Portugal</title>
+  <link rel="icon" type="image/png" href="../assets/images/favicon.png" />
+  <script>
+    (function () {
+      try {
+        const saved = localStorage.getItem("prs-theme");
+        const theme =
+          saved === "light" || saved === "dark"
+            ? saved
+            : window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light";
+        document.documentElement.setAttribute("data-theme", theme);
+      } catch (_) { }
+    })();
+  </script>
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+  <script src="../config/site.config.js"></script>
+  <link rel="preconnect" href="https://docs.google.com" />
+</head>
 
-  <!-- PROXIMA COMPETIÇÃO -->
-  <section class="section container">
-    <div class="section-head">
-      <h2>Próxima competição</h2>
-    </div>
+<body data-base=".." data-page="competicoes">
+  <div id="site-header"></div>
 
-    <div id="next-event-highlight" class="next-event-card">
-      <p class="muted">A carregar próxima prova...</p>
-    </div>
-  </section>
+  <main>
+    <!-- HERO -->
+    <section class="page-hero">
+      <div class="container">
+        <p class="kicker">Calendário</p>
+        <h1 class="page-title">Competições PRS Portugal</h1>
+        <p class="lead">Lista oficial de todas as competições futuras.</p>
+      </div>
+    </section>
 
-  <!-- CALENDÁRIO (igual ao teu) -->
-  <section class="section alt">
-    <div class="container">
+    <!-- PROXIMA COMPETIÇÃO -->
+    <section class="section container">
       <div class="section-head">
-        <h2>Calendário completo</h2>
-        <p class="muted">Atualizado com as próximas provas publicadas.</p>
+        <h2>Próxima competição</h2>
       </div>
 
-      <div id="events-grid" class="events-grid" aria-live="polite"></div>
+      <div id="next-event-highlight" class="next-event-card">
+        <p class="muted">A carregar próxima prova...</p>
+      </div>
+    </section>
 
-      <p id="events-empty" class="muted" hidden>
-        Sem competições publicadas de momento.
+    <!-- CALENDÁRIO (igual ao teu) -->
+    <section class="section alt">
+      <div class="container">
+        <div class="section-head">
+          <h2>Calendário completo</h2>
+          <p class="muted">Atualizado com as próximas provas publicadas.</p>
+        </div>
+
+        <div id="events-grid" class="events-grid" aria-live="polite"></div>
+
+        <p id="events-empty" class="muted" hidden>
+          Sem competições publicadas de momento.
+        </p>
+      </div>
+    </section>
+
+    <section class="section container" aria-labelledby="classificacoes-heading">
+      <div class="section-head">
+        <h2 id="classificacoes-heading">Classificações</h2>
+        <div class="results-year-control">
+          <label class="results-year-label" for="results-year-select">Época</label>
+          <select id="results-year-select" class="results-year-select" aria-label="Selecionar época"></select>
+        </div>
+      </div>
+      <p id="results-status" class="muted results-status" aria-live="polite"></p>
+      <div class="results-table-wrap">
+        <table id="results-table" class="results-table" hidden></table>
+      </div>
+      <p id="results-empty" class="muted" hidden>Sem classificações disponíveis neste momento.</p>
+      <p class="muted results-note">
+        A pontuação final de um atirador na temporada é uma combinação das suas três melhores pontuações em provas
+        (máximo de 300 pontos) e os seus pontos na Ultimate Match (máximo de 200 pontos), totalizando 500 pontos
+        possíveis.
       </p>
-    </div>
-  </section>
+    </section>
+  </main>
 
-  <section class="section container" aria-labelledby="classificacoes-heading">
-    <div class="section-head">
-      <h2 id="classificacoes-heading">Classificações</h2>
-      <div class="results-year-control">
-        <label class="results-year-label" for="results-year-select">Época</label>
-        <select id="results-year-select" class="results-year-select" aria-label="Selecionar época"></select>
-      </div>
-    </div>
-    <p id="results-status" class="muted results-status" aria-live="polite"></p>
-    <div class="results-table-wrap">
-      <table id="results-table" class="results-table" hidden></table>
-    </div>
-    <p id="results-empty" class="muted" hidden>Sem classificações disponíveis neste momento.</p>
-    <p class="muted results-note">
-      A pontuação final de um atirador na temporada é uma combinação das suas três melhores pontuações em provas (máximo de 300 pontos) e os seus pontos na Ultimate Match (máximo de 200 pontos), totalizando 500 pontos possíveis.
-    </p>
-  </section>
-</main>
+  <div id="site-footer"></div>
 
-    <div id="site-footer"></div>
+  <script type="module" src="../assets/js/competicoes.page.js"></script>
+</body>
 
-    <script type="module" src="../assets/js/competicoes.page.js"></script>
-  </body>
 </html>

@@ -1,62 +1,66 @@
 <!doctype html>
 <html lang="pt-PT">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Galeria da Competição | PRS Portugal</title>
-    <link rel="icon" type="image/png" href="../../assets/images/favicon.png" />
-    <script>
-      (function () {
-        try {
-          const saved = localStorage.getItem("prs-theme");
-          const theme =
-            saved === "light" || saved === "dark"
-              ? saved
-              : window.matchMedia("(prefers-color-scheme: dark)").matches
-                ? "dark"
-                : "light";
-          document.documentElement.setAttribute("data-theme", theme);
-        } catch (_) {}
-      })();
-    </script>
-    <link rel="stylesheet" href="../../assets/css/styles.css" />
-    <script src="../../config/site.config.js"></script>
-  </head>
-  <body data-base="../.." data-page="galeria">
-    <div id="site-header"></div>
 
-    <main>
-      <section class="page-hero">
-        <div class="container">
-          <div class="gallery-hero-top">
-            <p class="kicker">Galeria</p>
-            <a class="btn btn-secondary gallery-back-btn" href="../">Voltar à galeria</a>
-          </div>
-          <h1 id="gallery-title" class="page-title">A carregar...</h1>
-          <p id="gallery-meta" class="lead"></p>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Galeria da Competição | PRS Portugal</title>
+  <link rel="icon" type="image/png" href="../../assets/images/favicon.png" />
+  <script>
+    (function () {
+      try {
+        const saved = localStorage.getItem("prs-theme");
+        const theme =
+          saved === "light" || saved === "dark"
+            ? saved
+            : window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light";
+        document.documentElement.setAttribute("data-theme", theme);
+      } catch (_) { }
+    })();
+  </script>
+  <link rel="stylesheet" href="../../assets/css/styles.css" />
+  <script src="../../config/site.config.js"></script>
+</head>
+
+<body data-base="../.." data-page="galeria">
+  <div id="site-header"></div>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <div class="gallery-hero-top">
+          <p class="kicker">Galeria</p>
+          <a class="btn btn-secondary gallery-back-btn" href="../">Voltar à galeria</a>
         </div>
-      </section>
+        <h1 id="gallery-title" class="page-title">A carregar...</h1>
+        <p id="gallery-meta" class="lead"></p>
+      </div>
+    </section>
 
-      <section class="section container">
-        <div id="gallery-photos" class="gallery-photos" aria-live="polite"></div>
-        <p id="gallery-photos-empty" class="muted" hidden>Esta competição ainda não tem fotografias.</p>
-      </section>
-    </main>
+    <section class="section container">
+      <div id="gallery-photos" class="gallery-photos" aria-live="polite"></div>
+      <p id="gallery-photos-empty" class="muted" hidden>Esta competição ainda não tem fotografias.</p>
+    </section>
+  </main>
 
-    <div id="gallery-lightbox" class="gallery-lightbox" hidden>
-      <button id="gallery-lightbox-prev" class="gallery-lightbox-nav prev" type="button" aria-label="Imagem anterior">
-        <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
-      </button>
-      <button id="gallery-lightbox-close" class="gallery-lightbox-close" type="button" aria-label="Fechar visualização">×</button>
-      <img id="gallery-lightbox-image" src="" alt="" />
-      <p id="gallery-lightbox-caption" class="gallery-lightbox-caption"></p>
-      <button id="gallery-lightbox-next" class="gallery-lightbox-nav next" type="button" aria-label="Imagem seguinte">
-        <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
-      </button>
-    </div>
+  <div id="gallery-lightbox" class="gallery-lightbox" hidden>
+    <button id="gallery-lightbox-prev" class="gallery-lightbox-nav prev" type="button" aria-label="Imagem anterior">
+      <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+    </button>
+    <button id="gallery-lightbox-close" class="gallery-lightbox-close" type="button"
+      aria-label="Fechar visualização">×</button>
+    <img id="gallery-lightbox-image" src="" alt="" />
+    <p id="gallery-lightbox-caption" class="gallery-lightbox-caption"></p>
+    <button id="gallery-lightbox-next" class="gallery-lightbox-nav next" type="button" aria-label="Imagem seguinte">
+      <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+    </button>
+  </div>
 
-    <div id="site-footer"></div>
+  <div id="site-footer"></div>
 
-    <script type="module" src="../../assets/js/gallery-competition.page.js"></script>
-  </body>
+  <script type="module" src="../../assets/js/gallery-competition.page.js"></script>
+</body>
+
 </html>

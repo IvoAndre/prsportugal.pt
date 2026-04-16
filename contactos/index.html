@@ -1,73 +1,83 @@
 <!doctype html>
 <html lang="pt-PT">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Contactos | PRS Portugal</title>
-    <link rel="icon" type="image/png" href="../assets/images/favicon.png" />
-    <script>
-      (function () {
-        try {
-          const saved = localStorage.getItem("prs-theme");
-          const theme =
-            saved === "light" || saved === "dark"
-              ? saved
-              : window.matchMedia("(prefers-color-scheme: dark)").matches
-                ? "dark"
-                : "light";
-          document.documentElement.setAttribute("data-theme", theme);
-        } catch (_) {}
-      })();
-    </script>
-    <link rel="stylesheet" href="../assets/css/styles.css" />
-    <script src="../config/site.config.js"></script>
-  </head>
-  <body data-base=".." data-page="contactos">
-    <div id="site-header"></div>
 
-    <main>
-      <section class="page-hero">
-        <div class="container">
-          <p class="kicker">Contactos</p>
-          <h1 class="page-title">Fala com a organização</h1>
-          <p class="lead">Para inscrições, parcerias e informações oficiais do circuito.</p>
-        </div>
-      </section>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contactos | PRS Portugal</title>
+  <link rel="icon" type="image/png" href="../assets/images/favicon.png" />
+  <script>
+    (function () {
+      try {
+        const saved = localStorage.getItem("prs-theme");
+        const theme =
+          saved === "light" || saved === "dark"
+            ? saved
+            : window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light";
+        document.documentElement.setAttribute("data-theme", theme);
+      } catch (_) { }
+    })();
+  </script>
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+  <script src="../config/site.config.js"></script>
+</head>
 
-      <section class="section container">
-        <h2>Formulário de contacto</h2>
-        <form id="contact-form" class="contact-form" novalidate>
-          <input type="hidden" name="access_key" id="web3forms-access-key" />
-          <input type="hidden" name="subject" value="Novo contacto através do site PRS Portugal" />
-          <input type="checkbox" name="botcheck" class="hidden" tabindex="-1" autocomplete="off" />
-          <label>
-            Nome
-            <input type="text" name="name" required />
-          </label>
-          <label>
-            Email
-            <input type="email" name="email" required />
-          </label>
-          <label>
-            Assunto
-            <input type="text" name="subject" required />
-          </label>
-          <label>
-            Mensagem
-            <textarea name="message" rows="6" required></textarea>
-          </label>
-          <button class="btn btn-primary" type="submit" id="contact-submit">Enviar</button>
-          <p id="form-feedback" class="muted form-feedback" role="status" aria-live="polite"></p>
-        </form>
+<body data-base=".." data-page="contactos">
+  <div id="site-header"></div>
 
-        <h2>Canais diretos</h2>
-        <p>Email: geral@prsportugal.pt</p>
-        <p>Instagram: <a href="https://www.instagram.com/prs_pt/" target="_blank" rel="noopener noreferrer">@prs_pt</a></p>
-      </section>
-    </main>
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="kicker">Contactos</p>
+        <h1 class="page-title">Fala com a organização</h1>
+        <p class="lead">
+          Para inscrições, parcerias e informações oficiais do circuito.
+        </p>
+      </div>
+    </section>
 
-    <div id="site-footer"></div>
+    <section class="section container">
+      <h2>Formulário de contacto</h2>
+      <form id="contact-form" class="contact-form" novalidate>
+        <input type="hidden" name="access_key" id="web3forms-access-key" />
+        <input type="hidden" name="subject" value="Novo contacto através do site PRS Portugal" />
+        <input type="checkbox" name="botcheck" class="hidden" tabindex="-1" autocomplete="off" />
+        <label>
+          Nome
+          <input type="text" name="name" required />
+        </label>
+        <label>
+          Email
+          <input type="email" name="email" required />
+        </label>
+        <label>
+          Assunto
+          <input type="text" name="subject" required />
+        </label>
+        <label>
+          Mensagem
+          <textarea name="message" rows="6" required></textarea>
+        </label>
+        <button class="btn btn-primary" type="submit" id="contact-submit">
+          Enviar
+        </button>
+        <p id="form-feedback" class="muted form-feedback" role="status" aria-live="polite"></p>
+      </form>
 
-    <script type="module" src="../assets/js/contactos.page.js"></script>
-  </body>
+      <h2>Canais diretos</h2>
+      <p>Email: geral@prsportugal.pt</p>
+      <p>
+        Instagram:
+        <a href="https://www.instagram.com/prs_pt/" target="_blank" rel="noopener noreferrer">@prs_pt</a>
+      </p>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script type="module" src="../assets/js/contactos.page.js"></script>
+</body>
+
 </html>

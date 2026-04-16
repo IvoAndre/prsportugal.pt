@@ -1,150 +1,168 @@
 <!DOCTYPE html>
 <html lang="pt-PT">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PRS Portugal</title>
-    <meta
-      name="description"
-      content="PRS Portugal: calendário de competições, notícias e comunidade de Precision Rifle em Portugal."/>
-    <link rel="icon" type="image/png" href="assets/images/favicon.png" />
-    <script>
-      (function () {
-        try {
-          const saved = localStorage.getItem("prs-theme");
-          const theme =
-            saved === "light" || saved === "dark"
-              ? saved
-              : window.matchMedia("(prefers-color-scheme: dark)").matches
-                ? "dark"
-                : "light";
-          document.documentElement.setAttribute("data-theme", theme);
-        } catch (_) {}
-      })();
-    </script>
-    <link rel="stylesheet" href="assets/css/styles.css" />
-    <script src="config/site.config.js"></script>
-  </head>
-  <body data-base="." data-page="home">
-    <div id="site-header"></div>
 
-    <main>
-      <section class="hero">
-        <div class="container hero-grid">
-          <div>
-            <p class="kicker">Precision Rifle Series</p>
-            <h1>PRS Portugal</h1>
-            <p class="lead">
-              Plataforma oficial da comunidade PRS em Portugal com foco em competições,
-              partilha técnica e crescimento do desporto.
-            </p>
-            <div class="hero-actions">
-              <a class="btn btn-primary" href="competicoes/">Ver calendário</a>
-              <a class="btn btn-secondary" href="contactos/">Falar connosco</a>
-            </div>
-          </div>
-          <div class="hero-panel" aria-label="Resumo rapido">
-            <h2>Próxima competição</h2>
-            <p id="next-event-name">A carregar...</p>
-            <p id="next-event-when"></p>
-            <div id="next-event-countdown" class="inline-countdown"></div>
-          </div>
-        </div>
-      </section>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PRS Portugal</title>
+  <meta name="description"
+    content="PRS Portugal: calendário de competições, notícias e comunidade de Precision Rifle em Portugal." />
+  <link rel="icon" type="image/png" href="assets/images/favicon.png" />
+  <script>
+    (function () {
+      try {
+        const saved = localStorage.getItem("prs-theme");
+        const theme =
+          saved === "light" || saved === "dark"
+            ? saved
+            : window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light";
+        document.documentElement.setAttribute("data-theme", theme);
+      } catch (_) { }
+    })();
+  </script>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <script src="config/site.config.js"></script>
+</head>
 
-      <section class="section alt">
-        <div class="container">
-          <div class="section-head">
-            <h2>Competições em destaque</h2>
-            <a class="btn btn-secondary" href="competicoes/">Ver todas</a>
-          </div>
-          <div id="events-grid" class="events-grid" aria-live="polite"></div>
-          <p id="events-empty" class="muted" hidden>
-            Sem competições publicadas de momento.
+<body data-base="." data-page="home">
+  <div id="site-header"></div>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <p class="kicker">Precision Rifle Series</p>
+          <h1>PRS Portugal</h1>
+          <p class="lead">
+            Plataforma oficial da comunidade PRS em Portugal com foco em competições,
+            partilha técnica e crescimento do desporto.
           </p>
-        </div>
-      </section>
-
-      <section class="section container" aria-labelledby="faq-heading">
-        <div class="container">
-          <div class="section-head">
-            <h2 id="faq-heading">Informação PRS</h2>
-            <a class="btn btn-secondary" href="sobre/">Saber mais</a>
-          </div>
-          <div class="faq-grid">
-            <article class="faq-item">
-              <h3>O que é PRS?</h3>
-              <p>
-                O Precision Rifle Series é uma disciplina dinâmica de tiro de precisão a longa distância,
-                combinando técnica, leitura de vento e gestão de tempo.
-              </p>
-            </article>
-            <article class="faq-item">
-              <h3>Como começar?</h3>
-              <p>
-                Entra em contacto connosco e assite a uma prova ou treino. Acompanha atletas experientes e esclarece todas as dúvidas que tenhas sobre equipamento, segurança e progressão desportiva.
-              </p>
-            </article>
-            <article class="faq-item">
-              <h3>Que equipamento é necessário?</h3>
-              <p>
-                Depois de esclarecer todas as dúvidas, é recomendado uma carabina de ferrolho precisa, ótica adequada e equipamento de apoio. Podes iniciar com setup de entrada e evoluir gradualmente, ou então comprar equipamento melhor, mas gastas dinheiro apenas 1 vez.
-              </p>
-            </article>
-            <article class="faq-item">
-              <h3>Que nível preciso de ter?</h3>
-              <p>
-                Em Portugal, usamos apenas a Classe OPEN. A experiência vais ganhando com o tempo e com os treinos. O objetivo é participar e evoluir progressivamente no circuito nacional, sempre respeitando a Organização e toda a gente envolvida.
-              </p>
-            </article>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="competicoes/">Ver calendário</a>
+            <a class="btn btn-secondary" href="contactos/">Falar connosco</a>
           </div>
         </div>
-      </section>
+        <div class="hero-panel" aria-label="Resumo rapido">
+          <h2>Próxima competição</h2>
+          <p id="next-event-name">A carregar...</p>
+          <p id="next-event-when"></p>
+          <div id="next-event-countdown" class="inline-countdown"></div>
+        </div>
+      </div>
+    </section>
 
-      <section class="section container about-prs" aria-labelledby="sobre-prs-heading">
-        <h2 id="sobre-prs-heading">Sobre as PRS</h2>
-        <p>
-          A liga PRS organiza competições com sistema de pontos ao longo da época, promovendo um quadro
-          competitivo nacional consistente, seguro e transparente.
+    <section class="section alt">
+      <div class="container">
+        <div class="section-head">
+          <h2>Competições em destaque</h2>
+          <a class="btn btn-secondary" href="competicoes/">Ver todas</a>
+        </div>
+        <div id="events-grid" class="events-grid" aria-live="polite"></div>
+        <p id="events-empty" class="muted" hidden>
+          Sem competições publicadas de momento.
         </p>
-      </section>
+      </div>
+    </section>
 
-      <section class="section container mission-vision" aria-label="Missão e visão">
-        <article>
-          <h2>A nossa missão</h2>
-          <p>
-            Promover e desenvolver o tiro de precisão com "carabina" em Portugal de forma segura, prática e acessível a atletas de diferentes idades e níveis.
-          </p>
-        </article>
-        <article>
-          <h2>Visão da marca</h2>
-          <p>
-            Tornar o PRS uma referência nacional e internacional, com uma comunidade forte, inclusiva e
-            orientada para excelência desportiva.
-          </p>
-        </article>
-      </section>
+    <section class="section container" aria-labelledby="faq-heading">
+      <div class="container">
+        <div class="section-head">
+          <h2 id="faq-heading">Informação PRS</h2>
+          <a class="btn btn-secondary" href="sobre/">Saber mais</a>
+        </div>
+        <div class="faq-grid">
+          <article class="faq-item">
+            <h3>O que é PRS?</h3>
+            <p>
+              O Precision Rifle Series é uma disciplina dinâmica de tiro de precisão a longa distância,
+              combinando técnica, leitura de vento e gestão de tempo.
+            </p>
+          </article>
+          <article class="faq-item">
+            <h3>Como começar?</h3>
+            <p>
+              Entra em contacto connosco e assite a uma prova ou treino. Acompanha atletas experientes e esclarece todas
+              as dúvidas que tenhas sobre equipamento, segurança e progressão desportiva.
+            </p>
+          </article>
+          <article class="faq-item">
+            <h3>Que equipamento é necessário?</h3>
+            <p>
+              Depois de esclarecer todas as dúvidas, é recomendado uma carabina de ferrolho precisa, ótica adequada e
+              equipamento de apoio. Podes iniciar com setup de entrada e evoluir gradualmente, ou então comprar
+              equipamento melhor, mas gastas dinheiro apenas 1 vez.
+            </p>
+          </article>
+          <article class="faq-item">
+            <h3>Que nível preciso de ter?</h3>
+            <p>
+              Em Portugal, usamos apenas a Classe OPEN. A experiência vais ganhando com o tempo e com os treinos. O
+              objetivo é participar e evoluir progressivamente no circuito nacional, sempre respeitando a Organização e
+              toda a gente envolvida.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
 
-      <section class="section sponsors-section">
-  <div class="container">
-    <div class="sponsors-header">
-      <h2>Patrocinadores</h2>
-      <p class="subtitle">Parceiros que apoiam o PRS Portugal</p>
-    </div>
+    <section class="section container about-prs" aria-labelledby="sobre-prs-heading">
+      <h2 id="sobre-prs-heading">Sobre as PRS</h2>
+      <p>
+        A liga PRS organiza competições com sistema de pontos ao longo da época, promovendo um quadro
+        competitivo nacional consistente, seguro e transparente.
+      </p>
+    </section>
 
-    <div class="sponsors-grid">
-      <img src="assets/images/sponsors/cacicambra.png" alt="Cacicambra">
-      <img src="assets/images/sponsors/balistae.png" alt="Balistae Solution">
-      <img src="assets/images/sponsors/soundfusion.png" alt="Sound Fusion">
-      <img src="assets/images/sponsors/discovery.png" alt="Discovery Optics">
-      <img src="assets/images/sponsors/ultimate.png" alt="Ultimate Ballistics">
-    </div>
-  </div>
-</section>
-    </main>
+    <section class="section container mission-vision" aria-label="Missão e visão">
+      <article>
+        <h2>A nossa missão</h2>
+        <p>
+          Promover e desenvolver o tiro de precisão com "carabina" em Portugal de forma segura, prática e acessível a
+          atletas de diferentes idades e níveis.
+        </p>
+      </article>
+      <article>
+        <h2>Visão da marca</h2>
+        <p>
+          Tornar o PRS uma referência nacional e internacional, com uma comunidade forte, inclusiva e
+          orientada para excelência desportiva.
+        </p>
+      </article>
+    </section>
 
-    <div id="site-footer"></div>
+    <section class="section sponsors-section alt">
+      <div class="container">
+        <div class="sponsors-header">
+          <h2>Patrocinadores</h2>
+          <p class="subtitle">Parceiros que apoiam o PRS Portugal</p>
+        </div>
 
-    <script type="module" src="assets/js/index.page.js"></script>
-  </body>
+        <div class="sponsors-grid">
+          <a href="https://www.cacicambra.pt/" target="_blank" rel="noopener noreferrer">
+            <img src="assets/images/sponsors/cacicambra.webp" alt="Cacicambra" tooltip="Cacicambra" />
+          </a>
+          <a href="https://balistaesolution.com/" target="_blank" rel="noopener noreferrer">
+            <img src="assets/images/sponsors/balistae-solution.webp" alt="Balistae Solution" tooltip="Balistae Solution" />
+          </a>
+          <a href="https://www.soundfusion.pt/" target="_blank" rel="noopener noreferrer">
+            <img src="assets/images/sponsors/sound-fusion.webp" alt="Sound Fusion" tooltip="Sound Fusion" />
+          </a>
+          <a href="https://www.discoveryoptics.com/" target="_blank" rel="noopener noreferrer">
+            <img src="assets/images/sponsors/discovery-optics.webp" alt="Discovery Optics" tooltip="Discovery Optics" />
+          </a>
+          <a href="https://www.ultimateballistics.com/" target="_blank" rel="noopener noreferrer">
+            <img src="assets/images/sponsors/ultimate-balistics.webp" alt="Ultimate Ballistics" tooltip="Ultimate Ballistics" />
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script type="module" src="assets/js/index.page.js"></script>
+</body>
+
 </html>

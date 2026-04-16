@@ -97,11 +97,10 @@ function cardTemplate(slug, info) {
 
   return `
     <article class="gallery-card">
-      ${
-        safeThumb
-          ? `<div class="gallery-media-shell gallery-card-thumb-shell"><img class="gallery-card-thumb js-gallery-media" src="${safeThumb}" alt="Thumbnail de ${title}" loading="lazy" /></div>`
-          : ""
-      }
+      ${safeThumb
+      ? `<div class="gallery-media-shell gallery-card-thumb-shell"><img class="gallery-card-thumb js-gallery-media" src="${safeThumb}" alt="Thumbnail de ${title}" loading="lazy" /></div>`
+      : ""
+    }
       <h2>${title}</h2>
       <p class="muted">${date} - ${location}</p>
       <p>${count} fotografia(s)</p>

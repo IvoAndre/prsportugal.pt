@@ -66,7 +66,7 @@ async function findGalleryRoot(startDir) {
       if (stat.isDirectory()) {
         return current;
       }
-    } catch (_) {}
+    } catch (_) { }
 
     const parent = path.dirname(current);
 

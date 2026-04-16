@@ -1,200 +1,203 @@
 <!doctype html>
 <html lang="pt-PT">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sobre | PRS Portugal</title>
-    <link rel="icon" type="image/png" href="../assets/images/favicon.png" />
-    <script>
-      (function () {
-        try {
-          const saved = localStorage.getItem("prs-theme");
-          const theme =
-            saved === "light" || saved === "dark"
-              ? saved
-              : window.matchMedia("(prefers-color-scheme: dark)").matches
-                ? "dark"
-                : "light";
-          document.documentElement.setAttribute("data-theme", theme);
-        } catch (_) {}
-      })();
-    </script>
-    <link rel="stylesheet" href="../assets/css/styles.css" />
-    <script src="../config/site.config.js"></script>
-  </head>
-  <body data-base=".." data-page="sobre">
-    <div id="site-header"></div>
 
-    <main>
-  <!-- HERO -->
-  <section class="page-hero">
-    <div class="container">
-      <p class="kicker">Sobre Nós</p>
-      <h1 class="page-title">PPRSA</h1>
-      <p class="lead">
-        Associação criada em 2024 com o objetivo de desenvolver o tiro de precisão a longa distancia em Portugal.
-      </p>
-    </div>
-  </section>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sobre | PRS Portugal</title>
+  <link rel="icon" type="image/png" href="../assets/images/favicon.png" />
+  <script>
+    (function () {
+      try {
+        const saved = localStorage.getItem("prs-theme");
+        const theme =
+          saved === "light" || saved === "dark"
+            ? saved
+            : window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light";
+        document.documentElement.setAttribute("data-theme", theme);
+      } catch (_) { }
+    })();
+  </script>
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+  <script src="../config/site.config.js"></script>
+</head>
 
-  <!-- SOBRE -->
-  <section class="section container about-prs">
-    <h2>Quem somos</h2>
-    <p>
-      A PPRSA é uma associação dedicada à promoção do tiro de precisão a longa distância,
-      reunindo atletas, organizadores e entusiastas com o objetivo de desenvolver a modalidade
-      de forma estruturada, segura e acessível.
-    </p>
-  </section>
+<body data-base=".." data-page="sobre">
+  <div id="site-header"></div>
 
-  <!-- MISSÃO E VISÃO -->
-  <section class="section container mission-vision">
-    <article>
-      <h2>Missão</h2>
+  <main>
+    <!-- HERO -->
+    <section class="page-hero">
+      <div class="container">
+        <p class="kicker">Sobre Nós</p>
+        <h1 class="page-title">PPRSA</h1>
+        <p class="lead">
+          Associação criada em 2024 com o objetivo de desenvolver o tiro de precisão a longa distancia em Portugal.
+        </p>
+      </div>
+    </section>
+
+    <!-- SOBRE -->
+    <section class="section container about-prs">
+      <h2>Quem somos</h2>
       <p>
-        Promover o tiro de precisão em Portugal através da organização de competições,
-        formação de atletas e criação de uma comunidade sólida e colaborativa.
+        A PPRSA é uma associação dedicada à promoção do tiro de precisão a longa distância,
+        reunindo atletas, organizadores e entusiastas com o objetivo de desenvolver a modalidade
+        de forma estruturada, segura e acessível.
       </p>
-    </article>
+    </section>
 
-    <article>
-      <h2>Visão</h2>
-      <p>
-        Tornar o PRS Portugal uma referência nacional e internacional,
-        com um circuito competitivo reconhecido pela sua qualidade e profissionalismo.
-      </p>
-    </article>
-  </section>
-
-  <!-- VALORES -->
-  <section class="section container">
-    <div class="section-head">
-      <h2>Valores</h2>
-    </div>
-
-    <div class="faq-grid">
-      <article class="faq-item">
-        <h3>Segurança</h3>
-        <p>Prioridade máxima em todas as atividades e competições.</p>
+    <!-- MISSÃO E VISÃO -->
+    <section class="section container mission-vision">
+      <article>
+        <h2>Missão</h2>
+        <p>
+          Promover o tiro de precisão em Portugal através da organização de competições,
+          formação de atletas e criação de uma comunidade sólida e colaborativa.
+        </p>
       </article>
 
-      <article class="faq-item">
-        <h3>Rigor</h3>
-        <p>Organização profissional e cumprimento de regras internacionais.</p>
+      <article>
+        <h2>Visão</h2>
+        <p>
+          Tornar o PRS Portugal uma referência nacional e internacional,
+          com um circuito competitivo reconhecido pela sua qualidade e profissionalismo.
+        </p>
       </article>
+    </section>
 
-      <article class="faq-item">
-        <h3>Comunidade</h3>
-        <p>Ambiente de partilha, respeito e crescimento conjunto.</p>
-      </article>
+    <!-- VALORES -->
+    <section class="section container">
+      <div class="section-head">
+        <h2>Valores</h2>
+      </div>
 
-      <article class="faq-item">
-        <h3>Evolução</h3>
-        <p>Desenvolvimento contínuo de atletas e da modalidade.</p>
-      </article>
-    </div>
-  </section>
+      <div class="faq-grid">
+        <article class="faq-item">
+          <h3>Segurança</h3>
+          <p>Prioridade máxima em todas as atividades e competições.</p>
+        </article>
 
+        <article class="faq-item">
+          <h3>Rigor</h3>
+          <p>Organização profissional e cumprimento de regras internacionais.</p>
+        </article>
 
+        <article class="faq-item">
+          <h3>Comunidade</h3>
+          <p>Ambiente de partilha, respeito e crescimento conjunto.</p>
+        </article>
 
-  <section class="section container">
-  <div class="section-head">
-    <h2>Percurso</h2>
-  </div>
-
-  <div class="timeline">
-    <div class="timeline-item">
-      <span class="timeline-year">2023</span>
-      <p>Primeira prova experimental de PRF em Portugal organizada pelo Nelson Amaral.</p>
-    </div>
-
-
-    <div class="timeline-item">
-      <span class="timeline-year">2024</span>
-      <p>Fundação da PPRSA e início da estrutura organizativa.</p>
-    </div>
-
-    <div class="timeline-item">
-      <span class="timeline-year">2024</span>
-      <p>Primeiras competições oficiais e crescimento da comunidade.</p>
-    </div>
-
-    <div class="timeline-item">
-      <span class="timeline-year">Futuro</span>
-      <p>Expansão do circuito nacional e integração em competições internacionais.</p>
-    </div>
-  </div>
-</section>
+        <article class="faq-item">
+          <h3>Evolução</h3>
+          <p>Desenvolvimento contínuo de atletas e da modalidade.</p>
+        </article>
+      </div>
+    </section>
 
 
 
+    <section class="section container">
+      <div class="section-head">
+        <h2>Percurso</h2>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <span class="timeline-year">2023</span>
+          <p>Primeira prova experimental de PRF em Portugal organizada pelo Nelson Amaral.</p>
+        </div>
 
 
-<section class="section container hidden">
-  <div class="section-head">
-    <h2>Equipa</h2>
-  </div>
+        <div class="timeline-item">
+          <span class="timeline-year">2024</span>
+          <p>Fundação da PPRSA e início da estrutura organizativa.</p>
+        </div>
 
-  <div class="team-grid">
-    <article class="team-card">
-      <div class="team-avatar"></div>
-      <h3>Mario Rojas</h3>
-      <p class="muted">Direção</p>
-    </article>
+        <div class="timeline-item">
+          <span class="timeline-year">2024</span>
+          <p>Primeiras competições oficiais e crescimento da comunidade.</p>
+        </div>
+
+        <div class="timeline-item">
+          <span class="timeline-year">Futuro</span>
+          <p>Expansão do circuito nacional e integração em competições internacionais.</p>
+        </div>
+      </div>
+    </section>
 
 
-    <article class="team-card">
-      <div class="team-avatar"></div>
-      <h3>Mário Figueiredo</h3>
-      <p class="muted">Organização</p>
-    </article>
 
-    <article class="team-card">
-      <div class="team-avatar"></div>
-      <h3>Bruno Gonçalves</h3>
-      <p class="muted">Coordenação de Provas</p>
-    </article>
 
-    <article class="team-card">
-      <div class="team-avatar"></div>
-      <h3>Nuno Almeida</h3>
-      <p class="muted">Media & Comunicação</p>
-    </article>
 
-    <article class="team-card">
-      <div class="team-avatar"></div>
-      <h3>Jorge Azinheira</h3>
-      <p class="muted">Media & Comunicação</p>
-    </article>
+    <section class="section container hidden">
+      <div class="section-head">
+        <h2>Equipa</h2>
+      </div>
 
-    <article class="team-card">
-      <div class="team-avatar"></div>
-      <h3>Nuno Gião</h3>
-      <p class="muted">Media</p>
-    </article>
+      <div class="team-grid">
+        <article class="team-card">
+          <div class="team-avatar"></div>
+          <h3>Mario Rojas</h3>
+          <p class="muted">Direção</p>
+        </article>
 
-    <article class="team-card">
-      <img class="team-avatar" src="../assets/images/team/teamjoaofigueiredo.jpeg" alt="Nome do responsável" />
-      <h3>João Figueiredo</h3>
-      <p class="muted">Media</p>
-    </article>
-  </div>
-</section>
 
-  <!-- CALL TO ACTION -->
-  <section class="section container">
-    <div class="quick-card" style="text-align:center;">
-      <h2>Queres fazer parte?</h2>
-      <p class="muted">
-        Junta-te à comunidade PRS Portugal e começa a competir.
-      </p>
-      <a class="btn btn-primary" href="../contactos/">Entrar em contacto</a>
-    </div>
-  </section>
-</main>
+        <article class="team-card">
+          <div class="team-avatar"></div>
+          <h3>Mário Figueiredo</h3>
+          <p class="muted">Organização</p>
+        </article>
 
-    <div id="site-footer"></div>
+        <article class="team-card">
+          <div class="team-avatar"></div>
+          <h3>Bruno Gonçalves</h3>
+          <p class="muted">Coordenação de Provas</p>
+        </article>
 
-    <script type="module" src="../assets/js/basic.page.js"></script>
-  </body>
+        <article class="team-card">
+          <div class="team-avatar"></div>
+          <h3>Nuno Almeida</h3>
+          <p class="muted">Media & Comunicação</p>
+        </article>
+
+        <article class="team-card">
+          <div class="team-avatar"></div>
+          <h3>Jorge Azinheira</h3>
+          <p class="muted">Media & Comunicação</p>
+        </article>
+
+        <article class="team-card">
+          <div class="team-avatar"></div>
+          <h3>Nuno Gião</h3>
+          <p class="muted">Media</p>
+        </article>
+
+        <article class="team-card">
+          <img class="team-avatar" src="../assets/images/team/teamjoaofigueiredo.jpeg" alt="Nome do responsável" />
+          <h3>João Figueiredo</h3>
+          <p class="muted">Media</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- CALL TO ACTION -->
+    <section class="section container">
+      <div class="quick-card" style="text-align:center;">
+        <h2>Queres fazer parte?</h2>
+        <p class="muted">
+          Junta-te à comunidade PRS Portugal e começa a competir.
+        </p>
+        <a class="btn btn-primary" href="../contactos/">Entrar em contacto</a>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script type="module" src="../assets/js/basic.page.js"></script>
+</body>
+
 </html>

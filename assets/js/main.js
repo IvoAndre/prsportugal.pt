@@ -14,6 +14,26 @@ const nextEventCountdown = document.getElementById("next-event-countdown");
 let liveEvents = [];
 let liveCompetitionEvents = [];
 
+const COUNTRY_CODE_BY_NAME = {
+  portugal: "pt",
+  espanha: "es",
+  spain: "es",
+  franca: "fr",
+  france: "fr",
+  alemanha: "de",
+  germany: "de",
+  italia: "it",
+  italy: "it",
+  "reino unido": "gb",
+  "united kingdom": "gb",
+  uk: "gb",
+  "estados unidos": "us",
+  "united states": "us",
+  usa: "us",
+  eua: "us",
+  andorra: "ad"
+};
+
 function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
@@ -37,6 +57,31 @@ function formatDate(date) {
   const formatted = new Intl.DateTimeFormat(locale, formatterOptions).format(date);
 
   return formatted.charAt(0).toLocaleUpperCase(locale) + formatted.slice(1);
+}
+
+function normalizeCountryName(value) {
+  return String(value || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\.+$/, "");
+}
+
+function resolveCountryCode(location) {
+  const source = String(location || "").trim();
+  if (!source) {
+    return "";
+  }
+
+  const lastSegment = source.split(",").pop()?.trim() || source;
+  const normalized = normalizeCountryName(lastSegment);
+
+  if (/^[a-z]{2}$/i.test(normalized)) {
+    return normalized.toLowerCase();
+  }
+
+  return COUNTRY_CODE_BY_NAME[normalized] || "";
 }
 
 function isCompetitionEvent(event) {
@@ -82,19 +127,23 @@ function initImageLoadFx(root) {
 
 function eventRowTemplate(event) {
   const safeName = escapeHtml(event.name);
-  const safeLocation = escapeHtml(event.location || "Local por anunciar");
+  const locationText = event.location || "Local por anunciar";
+  const safeLocation = escapeHtml(locationText);
+  const countryCode = resolveCountryCode(locationText);
+  const locationWithFlag = countryCode
+    ? `<span class="event-location-display"><img class="event-country-flag" src="https://flagicons.lipis.dev/flags/4x3/${countryCode}.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" /><span>${safeLocation}</span></span>`
+    : safeLocation;
   const safeRegistrationUrl = event.registrationUrl ? escapeHtml(event.registrationUrl) : "";
 
   return `
     <article class="event-row" data-event-id="${event.id}">
       <h3>${safeName}</h3>
       <p class="event-meta">${formatDate(event.date)}</p>
-      <p class="event-meta">${safeLocation}</p>
-      ${
-        safeRegistrationUrl
-          ? `<a class="btn btn-secondary event-action" href="${safeRegistrationUrl}" target="_blank" rel="noopener noreferrer">+ Informações</a>`
-          : ""
-      }
+      <p class="event-meta event-location">${locationWithFlag}</p>
+      ${safeRegistrationUrl
+      ? `<a class="btn btn-secondary event-action" href="${safeRegistrationUrl}" target="_blank" rel="noopener noreferrer">+ Informações</a>`
+      : ""
+    }
       </article>
   `;
 }
@@ -168,11 +217,10 @@ function renderNextEventHighlight() {
     <div class="next-event-content">
       <h3>${safeName}</h3>
       <p class="muted">${formatDate(next.date)} • ${safeLocation}</p>
-      ${
-        next.registrationUrl
-          ? `<a class="btn btn-primary" href="${escapeHtml(next.registrationUrl)}" target="_blank">+ Informações</a>`
-          : ""
-      }
+      ${next.registrationUrl
+      ? `<a class="btn btn-primary" href="${escapeHtml(next.registrationUrl)}" target="_blank">+ Informações</a>`
+      : ""
+    }
     </div>
     ${safeCoverImageUrl ? `<img class="event-highlight-cover js-image-load-fx" src="${safeCoverImageUrl}" alt="Capa da competição ${safeName}" loading="lazy" />` : ""}
   `;

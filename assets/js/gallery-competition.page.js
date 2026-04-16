@@ -205,14 +205,14 @@ function render(info, slug) {
       const src = escapeHtml(resolveGalleryMediaUrl(String(source), slug, folder));
       const caption = typeof image === "object" && typeof image?.caption === "string" ? image.caption : "";
       const alt = escapeHtml(caption || `${name} - Fotografia ${index + 1}`);
-        const safeCaption = escapeHtml(caption || `${name} - Fotografia ${index + 1}`);
+      const safeCaption = escapeHtml(caption || `${name} - Fotografia ${index + 1}`);
 
-        return `<a class="gallery-media-shell" href="${src}" target="_blank" rel="noopener noreferrer" data-lightbox-src="${src}" data-caption="${safeCaption}" data-alt="${alt}"><img class="js-gallery-media" src="${src}" alt="${alt}" loading="lazy" /></a>`;
+      return `<a class="gallery-media-shell" href="${src}" target="_blank" rel="noopener noreferrer" data-lightbox-src="${src}" data-caption="${safeCaption}" data-alt="${alt}"><img class="js-gallery-media" src="${src}" alt="${alt}" loading="lazy" /></a>`;
     })
     .join("");
 
-      initElegantImageLoading(photos);
-      initLightbox();
+  initElegantImageLoading(photos);
+  initLightbox();
 }
 
 async function bootstrap() {
