@@ -13,6 +13,19 @@ const nextEventCountdown = document.getElementById("next-event-countdown");
 
 let liveEvents = [];
 let liveCompetitionEvents = [];
+let currentHeroEventId = "";
+let hasBoundCountdownLanguageSwitcher = false;
+
+const UI_LANGUAGE_STORAGE_KEY = "prs-lang";
+const COMPETITIONS_PAGE_KEY = "competicoes";
+const COUNTDOWN_LABELS = {
+  pt: { d: "dias", h: "horas", m: "min", s: "seg" },
+  en: { d: "days", h: "hours", m: "min", s: "sec" },
+  es: { d: "días", h: "horas", m: "min", s: "seg" },
+  fr: { d: "jours", h: "heures", m: "min", s: "sec" },
+  de: { d: "tage", h: "stunden", m: "min", s: "sek" },
+  it: { d: "giorni", h: "ore", m: "min", s: "sec" }
+};
 
 const COUNTRY_CODE_BY_NAME = {
   portugal: "pt",
@@ -148,27 +161,186 @@ function eventRowTemplate(event) {
   `;
 }
 
-function renderHeroCountdown() {
-  if (!nextEventCountdown) {
-    return;
-  }
+function getUiLanguage() {
+  const stored = localStorage.getItem(UI_LANGUAGE_STORAGE_KEY) || "pt";
+  return COUNTDOWN_LABELS[stored] ? stored : "pt";
+}
 
-  if (liveCompetitionEvents.length === 0) {
-    nextEventCountdown.innerHTML = "";
-    return;
-  }
+function getCountdownLabels() {
+  return COUNTDOWN_LABELS[getUiLanguage()] || COUNTDOWN_LABELS.pt;
+}
 
-  const now = new Date();
-  const next = liveCompetitionEvents.find((e) => e.date > now) || liveCompetitionEvents[0];
-  const cd = calculateCountdown(next.date);
-  const [d, h, m, s] = formatCountdownParts(cd);
-
-  nextEventCountdown.innerHTML = `
-    <div><strong>${d.replace("d", "")}</strong><span>dias</span></div>
-    <div><strong>${h.replace("h", "")}</strong><span>horas</span></div>
-    <div><strong>${m.replace("m", "")}</strong><span>min</span></div>
-    <div><strong>${s.replace("s", "")}</strong><span>seg</span></div>
+function buildCountdownMarkup(labels) {
+  return `
+    <div><strong data-countdown-unit="d">0</strong><span data-countdown-label="d">${labels.d}</span></div>
+    <div><strong data-countdown-unit="h">0</strong><span data-countdown-label="h">${labels.h}</span></div>
+    <div><strong data-countdown-unit="m">0</strong><span data-countdown-label="m">${labels.m}</span></div>
+    <div><strong data-countdown-unit="s">0</strong><span data-countdown-label="s">${labels.s}</span></div>
   `;
+}
+
+function ensureCountdownMarkup(container) {
+  if (!container) {
+    return;
+  }
+
+  const hasMarkup = Boolean(container.querySelector("[data-countdown-unit='d']"));
+  if (hasMarkup) {
+    return;
+  }
+
+  container.innerHTML = buildCountdownMarkup(getCountdownLabels());
+}
+
+function applyCountdownLabels(container) {
+  if (!container) {
+    return;
+  }
+
+  const labels = getCountdownLabels();
+  Object.entries(labels).forEach(([unit, text]) => {
+    const labelNode = container.querySelector(`[data-countdown-label='${unit}']`);
+    if (labelNode) {
+      labelNode.textContent = text;
+    }
+  });
+}
+
+function getHighlightCountdownContainer() {
+  const card = document.getElementById("next-event-highlight");
+  return card ? card.querySelector("[data-highlight-countdown]") : null;
+}
+
+function ensureHighlightCountdownMarkup() {
+  const container = getHighlightCountdownContainer();
+  ensureCountdownMarkup(container);
+}
+
+function updateCountdownValues(container, nextEvent) {
+  if (!container || !nextEvent) {
+    return;
+  }
+
+  const cd = calculateCountdown(nextEvent.date);
+  const [d, h, m, s] = formatCountdownParts(cd);
+  const values = {
+    d: d.replace("d", ""),
+    h: h.replace("h", ""),
+    m: m.replace("m", ""),
+    s: s.replace("s", "")
+  };
+
+  Object.entries(values).forEach(([unit, value]) => {
+    const node = container.querySelector(`[data-countdown-unit='${unit}']`);
+    if (node) {
+      node.textContent = value;
+    }
+  });
+}
+
+function refreshCountdownLabels() {
+  applyCountdownLabels(nextEventCountdown);
+  applyCountdownLabels(getHighlightCountdownContainer());
+}
+
+function bindCountdownLanguageSwitcher() {
+  if (hasBoundCountdownLanguageSwitcher) {
+    return;
+  }
+
+  const picker = document.getElementById("language-switcher");
+  if (!picker) {
+    return;
+  }
+
+  picker.addEventListener("change", () => {
+    refreshCountdownLabels();
+
+    const next = getCurrentHeroEvent();
+    if (next) {
+      updateHeroCountdownValues(next);
+      updateHighlightCountdownValues(next);
+    }
+  });
+
+  hasBoundCountdownLanguageSwitcher = true;
+}
+
+function getCurrentHeroEvent(now = new Date()) {
+  if (liveCompetitionEvents.length === 0) {
+    return null;
+  }
+
+  return liveCompetitionEvents.find((event) => event.date > now) || liveCompetitionEvents[0];
+}
+
+function ensureHeroCountdownMarkup() {
+  ensureCountdownMarkup(nextEventCountdown);
+}
+
+function updateHeroCountdownValues(nextEvent) {
+  if (!nextEventCountdown || !nextEvent) {
+    return;
+  }
+
+  ensureHeroCountdownMarkup();
+  applyCountdownLabels(nextEventCountdown);
+  updateCountdownValues(nextEventCountdown, nextEvent);
+}
+
+function updateHighlightCountdownValues(nextEvent) {
+  const container = getHighlightCountdownContainer();
+  if (!container || !nextEvent) {
+    return;
+  }
+
+  ensureHighlightCountdownMarkup();
+  applyCountdownLabels(container);
+  updateCountdownValues(container, nextEvent);
+}
+
+function renderHeroCountdown() {
+  if (liveCompetitionEvents.length === 0) {
+    currentHeroEventId = "";
+    if (nextEventCountdown) {
+      nextEventCountdown.innerHTML = "";
+    }
+    const highlight = getHighlightCountdownContainer();
+    if (highlight) {
+      highlight.innerHTML = "";
+    }
+    return;
+  }
+
+  const next = getCurrentHeroEvent();
+  if (!next) {
+    currentHeroEventId = "";
+    if (nextEventCountdown) {
+      nextEventCountdown.innerHTML = "";
+    }
+    const highlight = getHighlightCountdownContainer();
+    if (highlight) {
+      highlight.innerHTML = "";
+    }
+    return;
+  }
+
+  if (!nextEventCountdown) {
+    if (currentHeroEventId !== next.id) {
+      currentHeroEventId = next.id;
+      renderNextEventHighlight();
+    }
+
+    updateHighlightCountdownValues(next);
+    return;
+  }
+
+  if (currentHeroEventId !== next.id) {
+    renderHeroNextEvent();
+    renderNextEventHighlight();
+  }
+
+  updateHeroCountdownValues(next);
 }
 
 function renderHeroNextEvent() {
@@ -177,19 +349,23 @@ function renderHeroNextEvent() {
   }
 
   if (liveCompetitionEvents.length === 0) {
+    currentHeroEventId = "";
     nextEventName.textContent = "Sem provas previstas";
     nextEventWhen.textContent = "Consulta novamente em breve para novas datas.";
     nextEventCountdown.innerHTML = "";
     return;
   }
 
-  const now = new Date();
-  const next = liveCompetitionEvents.find((e) => e.date > now) || liveCompetitionEvents[0];
+  const next = getCurrentHeroEvent();
+  if (!next) {
+    currentHeroEventId = "";
+    nextEventCountdown.innerHTML = "";
+    return;
+  }
 
+  currentHeroEventId = next.id;
   nextEventName.textContent = next.name;
   nextEventWhen.textContent = `${formatDate(next.date)}${next.location ? ` - ${next.location}` : ""}`;
-
-  renderHeroCountdown();
 }
 
 
@@ -197,10 +373,12 @@ function renderHeroNextEvent() {
 
 function renderNextEventHighlight() {
   const container = document.getElementById("next-event-highlight");
+  const isCompetitionsPage = document.body?.dataset.page === COMPETITIONS_PAGE_KEY;
 
   if (!container) return;
 
   if (liveCompetitionEvents.length === 0) {
+    container.removeAttribute("data-event-id");
     container.innerHTML = `<p class="muted">Sem competições disponíveis.</p>`;
     return;
   }
@@ -212,11 +390,13 @@ function renderNextEventHighlight() {
   const safeLocation = escapeHtml(next.location || "Local por anunciar");
   const safeCoverImageUrl = next.coverImageUrl ? escapeHtml(resolveSiteUrl(next.coverImageUrl)) : "";
   const highlightClasses = `next-event-card highlight${safeCoverImageUrl ? " has-cover" : ""}`;
+  container.dataset.eventId = next.id;
 
   container.innerHTML = `
     <div class="next-event-content">
       <h3>${safeName}</h3>
       <p class="muted">${formatDate(next.date)} • ${safeLocation}</p>
+      ${isCompetitionsPage ? '<div class="inline-countdown next-event-inline-countdown" data-highlight-countdown></div>' : ""}
       ${next.registrationUrl
       ? `<a class="btn btn-primary" href="${escapeHtml(next.registrationUrl)}" target="_blank">+ Informações</a>`
       : ""
@@ -227,6 +407,11 @@ function renderNextEventHighlight() {
 
   container.className = highlightClasses;
   initImageLoadFx(container);
+
+  if (isCompetitionsPage) {
+    ensureHighlightCountdownMarkup();
+    updateHighlightCountdownValues(next);
+  }
 }
 
 function renderEvents() {
@@ -250,7 +435,6 @@ function renderEvents() {
 
 function tickHeroCountdown() {
   renderHeroCountdown();
-  renderHeroNextEvent();
 }
 
 export async function initEventsUi(options = {}) {
@@ -267,6 +451,8 @@ export async function initEventsUi(options = {}) {
     liveCompetitionEvents = upcomingEvents.filter(isCompetitionEvent);
     liveEvents = showTrainingsInCalendar ? upcomingEvents : liveCompetitionEvents;
     renderEvents();
+    bindCountdownLanguageSwitcher();
+    refreshCountdownLabels();
   } catch (error) {
     emptyState.hidden = false;
     emptyState.textContent = "Erro ao carregar competições. Tenta novamente em alguns minutos.";

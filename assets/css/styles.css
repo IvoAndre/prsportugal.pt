@@ -1058,6 +1058,15 @@ h2 {
   text-align: center;
 }
 
+.next-event-inline-countdown {
+  width: min(440px, 100%);
+}
+
+.next-event-content .next-event-inline-countdown div {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+}
+
 .event-highlight-cover {
   grid-column: 1;
   grid-row: 1;
