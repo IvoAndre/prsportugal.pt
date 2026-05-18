@@ -199,12 +199,33 @@ function cookieAttributes() {
   return attrs.join(";");
 }
 
+function getCookiePaths() {
+  const paths = new Set(["/"]);
+  const parts = window.location.pathname.split("/").filter(Boolean);
+  if (parts.length > 0) {
+    paths.add(`/${parts[0]}`);
+  }
+  return Array.from(paths);
+}
+
+function buildCookieAttributes(path) {
+  const attrs = [`path=${path}`, "SameSite=Lax"];
+  if (window.location.protocol === "https:") {
+    attrs.push("Secure");
+  }
+  return attrs.join(";");
+}
+
 function setGoogTransCookie(value) {
-  document.cookie = `googtrans=${value};${cookieAttributes()}`;
+  getCookiePaths().forEach((path) => {
+    document.cookie = `googtrans=${value};${buildCookieAttributes(path)}`;
+  });
 }
 
 function clearGoogTransCookie() {
-  document.cookie = `googtrans=;Max-Age=0;${cookieAttributes()}`;
+  getCookiePaths().forEach((path) => {
+    document.cookie = `googtrans=;Max-Age=0;${buildCookieAttributes(path)}`;
+  });
 }
 
 function applyLanguageCookie(lang) {
@@ -279,6 +300,10 @@ export function initGoogleTranslate() {
 
   const currentLanguage = readStoredLanguage();
   applyLanguageCookie(currentLanguage);
+
+  if (currentLanguage === "pt" && isTranslatedNow()) {
+    forceReloadFallback();
+  }
 
   window.googleTranslateElementInit = function googleTranslateElementInit() {
     if (!ensureGoogleWidget()) {
