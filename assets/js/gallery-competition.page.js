@@ -106,7 +106,11 @@ function initLightbox() {
     return;
   }
 
-  const items = [...document.querySelectorAll("[data-lightbox-src]")];
+  const items = [...document.querySelectorAll("[data-lightbox-src]")].sort((a, b) => {
+    const aIndex = Number(a.dataset.galleryIndex || 0);
+    const bIndex = Number(b.dataset.galleryIndex || 0);
+    return aIndex - bIndex;
+  });
   let currentIndex = 0;
 
   const openAt = (index) => {
@@ -170,6 +174,59 @@ function initLightbox() {
   });
 }
 
+function initResponsiveMasonry(root) {
+  const items = [...root.querySelectorAll(".gallery-media-shell")];
+  let currentColumns = 0;
+
+  const layoutColumns = (columns) => {
+    const wrappers = Array.from({ length: columns }, () => {
+      const wrapper = document.createElement("div");
+      wrapper.className = "gallery-column";
+      return wrapper;
+    });
+    const heights = Array.from({ length: columns }, () => 0);
+
+    items.forEach((item) => {
+      const image = item.querySelector("img");
+      const ratio = image?.naturalWidth && image?.naturalHeight ? image.naturalHeight / image.naturalWidth : 1;
+      const shortestIndex = heights.indexOf(Math.min(...heights));
+      wrappers[shortestIndex].appendChild(item);
+      heights[shortestIndex] += ratio;
+    });
+
+    root.replaceChildren(...wrappers);
+  };
+
+  const updateColumns = (force = false) => {
+    const itemCount = items.length;
+    const width = root.getBoundingClientRect().width;
+    const maxColumns = width >= 800 ? 4 : width >= 620 ? 3 : width >= 420 ? 2 : 1;
+    const columns = Math.max(1, Math.min(itemCount, maxColumns));
+
+    if (!force && currentColumns === columns) {
+      return;
+    }
+
+    currentColumns = columns;
+    root.dataset.galleryColumns = String(columns);
+    root.style.setProperty("--gallery-columns", String(columns));
+    layoutColumns(columns);
+  };
+
+  updateColumns(true);
+  window.addEventListener("resize", () => updateColumns());
+
+  items.forEach((item) => {
+    const image = item.querySelector("img");
+    image?.addEventListener("load", () => updateColumns(true), { once: true });
+  });
+
+  if ("ResizeObserver" in window) {
+    const observer = new ResizeObserver(() => updateColumns());
+    observer.observe(root);
+  }
+}
+
 function render(info, slug) {
   const title = document.getElementById("gallery-title");
   const meta = document.getElementById("gallery-meta");
@@ -208,11 +265,12 @@ function render(info, slug) {
       const alt = escapeHtml(caption || `${name} - Fotografia ${index + 1}`);
       const safeCaption = escapeHtml(caption || `${name} - Fotografia ${index + 1}`);
 
-      return `<a class="gallery-media-shell" href="${src}" target="_blank" rel="noopener noreferrer" data-lightbox-src="${src}" data-caption="${safeCaption}" data-alt="${alt}"><img class="js-gallery-media" src="${src}" alt="${alt}" loading="lazy" /></a>`;
+      return `<a class="gallery-media-shell" href="${src}" target="_blank" rel="noopener noreferrer" data-gallery-index="${index}" data-lightbox-src="${src}" data-caption="${safeCaption}" data-alt="${alt}"><img class="js-gallery-media" src="${src}" alt="${alt}" loading="lazy" /></a>`;
     })
     .join("");
 
   initElegantImageLoading(photos);
+  initResponsiveMasonry(photos);
   initLightbox();
 }
 
