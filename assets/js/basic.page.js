@@ -1,3 +1,9 @@
 import { loadSharedComponents } from "./components.js";
+import { refreshGoogleTranslate } from "./translate.js";
 
-loadSharedComponents();
+async function bootstrap() {
+  await loadSharedComponents();
+  refreshGoogleTranslate({ delay: 250 });
+}
+
+bootstrap();
