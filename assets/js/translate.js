@@ -208,24 +208,56 @@ function getCookiePaths() {
   return Array.from(paths);
 }
 
-function buildCookieAttributes(path) {
+function buildCookieAttributes(path, options = {}) {
   const attrs = [`path=${path}`, "SameSite=Lax"];
-  if (window.location.protocol === "https:") {
+  if (options.domain) {
+    attrs.push(`domain=${options.domain}`);
+  }
+  if (options.secure) {
     attrs.push("Secure");
   }
   return attrs.join(";");
 }
 
+function getCookieDomains() {
+  const host = window.location.hostname;
+  const parts = host.split(".").filter(Boolean);
+  const domains = new Set([host]);
+
+  if (parts.length >= 2) {
+    domains.add(`.${parts.slice(-2).join(".")}`);
+  }
+
+  if (parts.length >= 3) {
+    domains.add(`.${parts.slice(-3).join(".")}`);
+  }
+
+  return Array.from(domains);
+}
+
+function deleteGoogTransCookieEverywhere() {
+  const paths = ["/", ...getCookiePaths()];
+  const domains = getCookieDomains();
+
+  paths.forEach((path) => {
+    domains.forEach((domain) => {
+      [false, true].forEach((secure) => {
+        document.cookie = `googtrans=;Max-Age=0;${buildCookieAttributes(path, { domain, secure })}`;
+      });
+    });
+  });
+}
+
 function setGoogTransCookie(value) {
   getCookiePaths().forEach((path) => {
-    document.cookie = `googtrans=${value};${buildCookieAttributes(path)}`;
+    getCookieDomains().forEach((domain) => {
+      document.cookie = `googtrans=${value};${buildCookieAttributes(path, { domain, secure: window.location.protocol === "https:" })}`;
+    });
   });
 }
 
 function clearGoogTransCookie() {
-  getCookiePaths().forEach((path) => {
-    document.cookie = `googtrans=;Max-Age=0;${buildCookieAttributes(path)}`;
-  });
+  deleteGoogTransCookieEverywhere();
 }
 
 function applyLanguageCookie(lang) {
