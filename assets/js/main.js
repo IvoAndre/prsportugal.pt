@@ -1,5 +1,6 @@
 import { calculateCountdown, formatCountdownParts } from "./countdown.js";
 import { fetchEventsFromSheet } from "./sheets.js";
+import { initGoogleTranslate } from "./translate.js";
 
 const config = window.PRS_CONFIG || {};
 const locale = config.locale || "pt-PT";
@@ -453,9 +454,11 @@ export async function initEventsUi(options = {}) {
     renderEvents();
     bindCountdownLanguageSwitcher();
     refreshCountdownLabels();
+    initGoogleTranslate();
   } catch (error) {
     emptyState.hidden = false;
     emptyState.textContent = "Erro ao carregar competições. Tenta novamente em alguns minutos.";
+    initGoogleTranslate();
   }
 
   setInterval(tickHeroCountdown, 1000);

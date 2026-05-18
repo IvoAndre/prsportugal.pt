@@ -236,7 +236,11 @@ export async function loadSharedComponents() {
     initFontAwesome();
     initGlobalImageLoading();
     initThemeToggle(basePath);
-    initGoogleTranslate();
+    const pageKey = document.body?.dataset.page || "";
+    const shouldDeferTranslate = pageKey === "home" || pageKey === "competicoes";
+    if (!shouldDeferTranslate) {
+      initGoogleTranslate();
+    }
     initFloatingLanguageControl();
   } finally {
     revealPageWhenLoaded();

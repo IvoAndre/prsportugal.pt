@@ -272,6 +272,11 @@ function setGoogleComboLanguage(lang) {
 }
 
 export function initGoogleTranslate() {
+  if (window.__prsTranslateInitialized) {
+    return;
+  }
+  window.__prsTranslateInitialized = true;
+
   const currentLanguage = readStoredLanguage();
   applyLanguageCookie(currentLanguage);
 
